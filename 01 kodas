@@ -88,10 +88,36 @@ int main() {
                 cout << "Sarasas tuscias.\n";
                 continue;
             }
-            sort(Grupe.begin(), Grupe.end(),
-                [](const Studentas& a, const Studentas& b) {
-                    return a.vard < b.vard;
-                });
+            int rikiuot;
+            while (true)
+            {
+                cout << "\nAr rikiuoti studentus?\n";
+                cout << "1 - taip\n";
+                cout << "2 - ne\n";
+                cin >> rikiuot;
+
+                if (cin.fail()) {
+                    cin.clear();
+                    cin.ignore(100000, '\n');
+                    cout << "Neteisinga ivestis! Bandykite dar karta.\n";
+                    continue;
+                }
+                if (rikiuot == 1) {
+                    sort(Grupe.begin(), Grupe.end(),
+                        [](const Studentas& a, const Studentas& b) {
+                            return a.vard < b.vard;
+                        });
+                    cout << "Studentai surikiuoti pagal varda.\n";
+                    break;
+                }
+                else if (rikiuot == 2) {
+                    cout << "Studentai nebus rikiuojami.\n";
+                    break;
+                }
+                else {
+                    cout << "Netinkamas pasirinkimas. Bandykite dar karta\n";
+                }
+            }
 
             int rez_pasirinkimas;
             while (true) {
@@ -307,19 +333,19 @@ void apdorokDideliFaila(const string& failoVardas, vector<Studentas>& Grupe) { /
         skaiciuokRezultatus(s);
         Grupe.emplace_back(std::move(s)); // perkeliam studento objekta i Grupe vektoriu, emplace_back sukuria objekta tiesiai vektoriuje, nenaudojant kopijavimo ar klonavimo, std::move nurodo, kad objektas gali buti perkeliamas, o ne kopijuojamas
     }
-	int pasirenka;
+    int pasirenka;
     cout << "Nuskaityta studentu: " << Grupe.size() << "\n";
     cout << "Kaip norite gauti rezultatus?:\n";
-	cout <<  "1 - pagal vidurki\n";
-	cout <<  "2 - pagal mediana\n";
-	cout <<  "3 - abu\n";
+    cout << "1 - pagal vidurki\n";
+    cout << "2 - pagal mediana\n";
+    cout << "3 - abu\n";
     cin >> pasirenka;
     spausdinkRezultatus(Grupe, pasirenka, "rezultatai.txt"); // iskvieciame spausdinkRezultatus funkcija, kad issaugoti rezultatus i faila
 
 }
 void spausdinkRezultatus(const vector<Studentas>& Grupe, int rez_pasirinkimas, const string& failoVardas) {
     ofstream out(failoVardas);
-	if (!out) { // patikriname ar pavyko sukurti faila
+    if (!out) { // patikriname ar pavyko sukurti faila
         cout << "Nepavyko sukurti failo: " << failoVardas << endl;
         return;
     }
@@ -331,7 +357,7 @@ void spausdinkRezultatus(const vector<Studentas>& Grupe, int rez_pasirinkimas, c
     else out << right << setw(15) << "Galutinis (Vid.)" << right << setw(15) << "Galutinis (Med.)\n";
     out << "-------------------------------------------------------------\n";
 
-	for (const auto& s : Grupe) { // auto& s nurodo, kad s yra nuoroda i esama objekta, o ne kopija
+    for (const auto& s : Grupe) { // auto& s nurodo, kad s yra nuoroda i esama objekta, o ne kopija
         out << left << setw(15) << s.vard << left << setw(15) << s.pav;
         if (rez_pasirinkimas == 1)
             out << right << setw(15) << fixed << setprecision(2) << s.rezVid << endl;
