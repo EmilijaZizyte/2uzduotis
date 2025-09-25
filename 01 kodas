@@ -90,6 +90,10 @@ int main() {
                 cout << "Sarasas tuscias.\n";
                 continue;
             }
+            if (Grupe.size() > 1000) { // jei studentų per daug, nespausdinti
+                cout << "Studentu per daug (" << Grupe.size() << "), rezultatai bus tik faile.\n";
+                continue;
+            }
             int rikiuot;
             while (true)
             {
