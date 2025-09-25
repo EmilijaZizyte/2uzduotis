@@ -206,22 +206,28 @@ Studentas ivesk() {
         cout << "Pavarde gali tureti tik raides. Bandykite dar karta\n";
     }
 
-    cout << "Iveskite namu darbu pazymius (vienas per eilute). Baigti tuscia eilute (spauskite enter):\n";
-    cin.ignore();
+    cin.ignore(10000, '\n'); // išvalome likusį newline po cin
+    cout << "Iveskite namu darbu pazymius atskirdami tarpais. Baigti tuscia eilute (spauskite enter du kartus):\n";
+
     while (true) {
-        getline(cin, input);
-        if (input.empty()) break;
+        getline(cin, input); // nuskaitom vieną eilutę
+        if (input.empty()) break; // jei tuščia, baigiam ciklą
 
         stringstream ss(input);
         int m;
-        string extra;
-        if (ss >> m && !(ss >> extra) && m >= 0 && m <= 10) {
+        bool invalid = false;
+
+        while (ss >> m) {
+            if (m < 0 || m > 10) {
+                cout << "Blogas pazymys: " << m << ". Tik 0-10 galima.\n";
+                invalid = true;
+                break;
+            }
             Laik.paz.push_back(m);
         }
-        else {
-            cout << "Bloga ivestis! Iveskite skaiciu 0-10 arba tuscia eilute pabaigai\n";
-        }
+             
     }
+
 
     while (true) {
         cout << "Iveskite egzamina desimtbaleje sistemoje: ";
