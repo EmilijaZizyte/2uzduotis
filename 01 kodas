@@ -4,10 +4,11 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
-#include <sstream> 
-#include <cstdlib> // rand() ir srand()
-#include <ctime> // time() ir srand()
-#include <fstream> // failu ivedimui
+#include <sstream>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <limits>
 
 using namespace std;
 
@@ -21,13 +22,15 @@ struct Studentas {
 };
 
 Studentas ivesk();
-double mediana(const vector<int>& v); //  funkcija gauna vektoriaus nuoroda, kad nereiktu kopijuoti viso vektoriaus
-void skaiciuokRezultatus(Studentas& s);// &s yra nuoroda i Studentas informacija, kurioje saugoma informacija apie studentus, kad nereiktu kopijuoti visos struktūros, tieiosg yra nurodo ta pacia struktura
-void nuskaitykIsFailo(vector<Studentas>& Grupe);// &Grupe yra nuoroda i vektoriu, kad nereiktu kopijuoti viso vektoriaus
+double mediana(const vector<int>& v);
+void skaiciuokRezultatus(Studentas& s);
+void nuskaitykIsFailo(vector<Studentas>& Grupe);
+void apdorokDideliFaila(const string& failoVardas, vector<Studentas>& Grupe);
+void spausdinkRezultatus(const vector<Studentas>& Grupe, int rez_pasirinkimas, const string& failoVardas);
 
 int main() {
-	srand(time(0)); //paima laika sekundemis konvertuoja i tinkama tipa, o strand nustato atsitiktiniu skaiciu generavimo pradzia
-    vector<Studentas> Grupe; //mano struktura studentas laikanti informacija apie studentus ir juos saugo pavadinimu Grupe 
+    srand((unsigned)time(0));
+    vector<Studentas> Grupe;
 
     while (true) {
         cout << "\nPasirinkite:\n";
@@ -35,13 +38,14 @@ int main() {
         cout << "2 - Rodyti studentu rezultatus\n";
         cout << "3 - Baigti programa\n";
         cout << "4 - Nuskaityti studentus is failo\n";
+        cout << "5 - Nuskaityti labai dideli faila (pvz., 10k+ studentu)\n";
         cout << "Jusu pasirinkimas: ";
 
         int pasirinkimas;
         cin >> pasirinkimas;
         if (cin.fail()) {
             cin.clear();
-            cin.ignore(10000, '\n'); //isvalo klaviaturos ivedimo eilutes likucius, kad kitas ivedimas veiktu tvarkingai
+            cin.ignore(10000, '\n');
             cout << "Bandykite dar karta\n";
             continue;
         }
@@ -56,9 +60,9 @@ int main() {
                 cin.clear(); cin.ignore(10000, '\n');
                 cout << "Netinkamas pasirinkimas! Iveskite 1 arba 2\n";
             }
-            cin.ignore(); // nurodo isvalyti ivedima nuo likusiu simboliu
+            cin.ignore();
 
-            Studentas Laik; //kuriamas laikinas Studentas tipo kintamasis Laik
+            Studentas Laik;
             if (metode == 2) {
                 int vardSkaicius = rand() % 100;
                 int pavSkaicius = rand() % 100;
@@ -75,8 +79,8 @@ int main() {
                 Laik = ivesk();
             }
 
-            skaiciuokRezultatus(Laik); ///sugenertuotus rezultatus ar ivestus nusiuncia i funkcija skaiciuokRezultatus
-            Grupe.push_back(Laik);//sugeneruotus rezultatus prideda i grupe
+            skaiciuokRezultatus(Laik);
+            Grupe.push_back(Laik);
 
         }
         else if (pasirinkimas == 2) {
@@ -84,8 +88,9 @@ int main() {
                 cout << "Sarasas tuscias.\n";
                 continue;
             }
-            sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) {////////
-                return a.vard < b.vard;
+            sort(Grupe.begin(), Grupe.end(),
+                [](const Studentas& a, const Studentas& b) {
+                    return a.vard < b.vard;
                 });
 
             int rez_pasirinkimas;
@@ -109,7 +114,7 @@ int main() {
             cout << "-------------------------------------------------------------\n";
 
             for (size_t i = 0; i < Grupe.size(); i++) {
-                Studentas& s = Grupe[i]; //trumpinimas, kad nereiktu visada rasyti Grupe[i], galima pasiekti grupeje Studentas i-tojo elemento reiksmes
+                Studentas& s = Grupe[i];
                 cout << left << setw(15) << s.vard << left << setw(15) << s.pav;
                 if (rez_pasirinkimas == 1)
                     cout << right << setw(15) << fixed << setprecision(2) << s.rezVid << endl;
@@ -119,7 +124,6 @@ int main() {
                     cout << right << setw(15) << fixed << setprecision(2) << s.rezVid
                     << right << setw(15) << fixed << setprecision(2) << s.rezMed << endl;
             }
-
 
         }
         else if (pasirinkimas == 3) {
@@ -131,6 +135,13 @@ int main() {
             nuskaitykIsFailo(Grupe);
 
         }
+        else if (pasirinkimas == 5) {
+            string failoVardas;
+            cout << "Iveskite didelio failo kelia: ";
+            cin >> failoVardas;
+            apdorokDideliFaila(failoVardas, Grupe);
+
+        }
         else {
             cout << "Netinkamas pasirinkimas.\n";
         }
@@ -139,15 +150,15 @@ int main() {
     return 0;
 }
 
-Studentas ivesk() { //deklaruoja funkcija ivesk, kuri grazina Studentas tipo reiksme
-    Studentas Laik; //kuriamas laikinas Studentas tipo kintamasis Laik
-    string input; // reiksme laikanti eilute
+Studentas ivesk() {
+    Studentas Laik;
+    string input;
 
     while (true) {
         cout << "Iveskite varda: ";
         cin >> Laik.vard;
         bool valid = true;
-        for (size_t i = 0; i < Laik.vard.size(); i++) //size_t visada teigiamas reiksmes
+        for (size_t i = 0; i < Laik.vard.size(); i++)
             if (!isalpha(Laik.vard[i])) {
                 valid = false;
                 break;
@@ -170,18 +181,15 @@ Studentas ivesk() { //deklaruoja funkcija ivesk, kuri grazina Studentas tipo rei
     }
 
     cout << "Iveskite namu darbu pazymius (vienas per eilute). Baigti tuscia eilute (spauskite enter):\n";
-    cin.ignore(); // isvalome buferi nuo likusiu simboliu
+    cin.ignore();
     while (true) {
-        getline(cin, input); // nuskaityti visą eilutę
-        if (input.empty()) break; // jei tuscia eilutė, baigti įvedimą
+        getline(cin, input);
+        if (input.empty()) break;
 
-        stringstream ss(input);//stringstream leidzia apdoroti eilute kaip srauta jei rasyciau tik cin >> m, tai butu blogai, nes jei ivestis bloga, pvz "5 abc", tai cin uzstrigtu
+        stringstream ss(input);
         int m;
-        string extra; // papildomas kintamasis, skirtas patikrinti, ar po skaiciaus yra daugiau simboliu
-        // bandoma nuskaityti sveika skaiciu is srauto ir tikrinama ar po jo nera daugiau simboliu
-
-        if (ss >> m && !(ss >> extra) && m >= 0 && m <= 10) { //ss >> extra tikrina ar po pirmo skaiciaus 
-            // m sėkmingai nuskaitytas, ir po jo daugiau simbolių nėra
+        string extra;
+        if (ss >> m && !(ss >> extra) && m >= 0 && m <= 10) {
             Laik.paz.push_back(m);
         }
         else {
@@ -201,15 +209,14 @@ Studentas ivesk() { //deklaruoja funkcija ivesk, kuri grazina Studentas tipo rei
 }
 
 double mediana(const vector<int>& v) {
-    vector<int> temp = v;//temp laikina vektoriaus kopija, kad nesugadinti pradinio vektoriaus
-    sort(temp.begin(), temp.end());// surusiuoja temp vektoriu
-    int n = (int)temp.size();// vektoriaus dydis int tipas
+    vector<int> temp = v;
+    sort(temp.begin(), temp.end());
+    int n = (int)temp.size();
     if (n % 2 == 0) return (temp[n / 2 - 1] + temp[n / 2]) / 2.0;
     else return temp[n / 2];
 }
 
-void skaiciuokRezultatus(Studentas& s) {// priima Studentas tipo kintamaji s kaip nuoroda, kad nereiktu kopijuoti viso struktūros
-    // jei yra namu darbu, skaiciuojame galutini pagal vidurki
+void skaiciuokRezultatus(Studentas& s) {
     if (!s.paz.empty()) {
         double suma = 0;
         for (size_t i = 0; i < s.paz.size(); i++) suma += s.paz[i];
@@ -217,36 +224,35 @@ void skaiciuokRezultatus(Studentas& s) {// priima Studentas tipo kintamaji s kai
         s.rezMed = s.egzas * 0.6 + mediana(s.paz) * 0.4;
     }
     else {
-        // jei namų darbų nėra, galutinis = egzaminas
         s.rezVid = s.rezMed = s.egzas * 0.6;
     }
 }
 
 void nuskaitykIsFailo(vector<Studentas>& Grupe) {
-    string failoVardas; // sring tipo kintamasis failoVardas
+    string failoVardas;
     cout << "Iveskite failo kelia: ";
     cin >> failoVardas;
 
-	ifstream in(failoVardas.c_str()); //skirta atidaryti duomenų failą skaitymui // c_str() konvertuoja string i const char*, o taip reikia daryti nes gali priimti tik const char* tipo reiksme
+    ifstream in(failoVardas.c_str());
     if (!in) {
         cout << "Nepavyko atidaryti failo\n";
         return;
     }
 
-    string eilute; //string tipo kintamasis eilute
-    getline(in, eilute); //pirmoji eilute yra antraste, jos nuskaitom, bet niekur neissaugom
+    string eilute;
+    getline(in, eilute);
 
-    while (getline(in, eilute)) { // nuskaito po viena eilute is failo, get line grizta false, kai pasiekia failo pabaiga, in yra ifstream tipas
+    while (getline(in, eilute)) {
         if (eilute.empty()) continue;
 
-        stringstream ss(eilute); //stringstream leidzia apdoroti eilute kaip srauta
-        Studentas s; //kuriamas laikinas Studentas tipo kintamasis s
+        stringstream ss(eilute);
+        Studentas s;
         if (!(ss >> s.vard >> s.pav)) {
             cout << "Neapskaiciuota: truksta vardas/pavarde -> " << eilute << "\n";
             continue;
         }
 
-        vector<int> laik; //laikinas vektorius laik, skirtas saugoti pazymius
+        vector<int> laik;
         int sk;
         while (ss >> sk) laik.push_back(sk);
 
@@ -255,13 +261,86 @@ void nuskaitykIsFailo(vector<Studentas>& Grupe) {
             continue;
         }
 
-        s.egzas = laik.back(); // paskutinis skaicius yra egzaminas
-        laik.pop_back();// pasalina paskutini elementa is laik vektoriaus
-        s.paz = laik;// likusieji skaiciai yra namu darbu pazymiai
+        s.egzas = laik.back();
+        laik.pop_back();
+        s.paz = laik;
 
         skaiciuokRezultatus(s);
-        Grupe.push_back(s);// prideda i grupe
+        Grupe.push_back(s);
     }
 
-    cout << "Failas nuskaitytas";
+    cout << "Failas nuskaitytas\n";
+}
+
+void apdorokDideliFaila(const string& failoVardas, vector<Studentas>& Grupe) { // string& failoVardas nurodo, kad 
+    ifstream in(failoVardas);
+    if (!in) {
+        cout << "Nepavyko atidaryti failo!\n";
+        return;
+    }
+
+    Grupe.clear(); // Isvalome esama sarasa
+    Grupe.reserve(1'000'000); // Rezervuojame vietos 1 milijonui studentu, taip greiciau nei naudojant push_back kuris gali reikalauti daug kopijavimo
+
+    string vard, pav, eilute;
+    int sk;
+
+    getline(in, eilute); // praleidziame antraste
+
+    while (in >> vard >> pav) {
+        Studentas s; // Kuriame nauja studento objekta
+        s.vard = vard;
+        s.pav = pav;
+
+        vector<int> laik;
+        while (in.peek() != '\n' && in >> sk) { // in.peek() nurodoja, kad tikrinsime ar nepasieke naujos eilutes, o in >> sk skaito sekanti skaiciu
+            laik.push_back(sk); // ir prideda ji i laikina pazymiu vektoriu
+        }
+        in.ignore(numeric_limits<streamsize>::max(), '\n'); // in.ignore() praleidzia likusia eilutes dali iki naujos eilutes, o taip reikia daryti nes jei nebus pazymiu, tai in.peek() visada bus '\n' ir bus begalinis ciklas
+
+        if (laik.empty()) continue;
+
+        s.egzas = laik.back(); // paskutinis skaicius yra egzaminas
+        laik.pop_back();
+        s.paz = std::move(laik); // perkeliam laikina pazymiu vektoriu i studento pazymiu vektoriu
+
+        skaiciuokRezultatus(s);
+        Grupe.emplace_back(std::move(s)); // perkeliam studento objekta i Grupe vektoriu, emplace_back sukuria objekta tiesiai vektoriuje, nenaudojant kopijavimo ar klonavimo, std::move nurodo, kad objektas gali buti perkeliamas, o ne kopijuojamas
+    }
+	int pasirenka;
+    cout << "Nuskaityta studentu: " << Grupe.size() << "\n";
+    cout << "Kaip norite gauti rezultatus?:\n";
+	cout <<  "1 - pagal vidurki\n";
+	cout <<  "2 - pagal mediana\n";
+	cout <<  "3 - abu\n";
+    cin >> pasirenka;
+    spausdinkRezultatus(Grupe, pasirenka, "rezultatai.txt"); // iskvieciame spausdinkRezultatus funkcija, kad issaugoti rezultatus i faila
+
+}
+void spausdinkRezultatus(const vector<Studentas>& Grupe, int rez_pasirinkimas, const string& failoVardas) {
+    ofstream out(failoVardas);
+	if (!out) { // patikriname ar pavyko sukurti faila
+        cout << "Nepavyko sukurti failo: " << failoVardas << endl;
+        return;
+    }
+
+    out << "-------------------------------------------------------------\n";
+    out << left << setw(15) << "Vardas" << left << setw(15) << "Pavarde";
+    if (rez_pasirinkimas == 1) out << right << setw(15) << "Galutinis (Vid.)\n";
+    else if (rez_pasirinkimas == 2) out << right << setw(15) << "Galutinis (Med.)\n";
+    else out << right << setw(15) << "Galutinis (Vid.)" << right << setw(15) << "Galutinis (Med.)\n";
+    out << "-------------------------------------------------------------\n";
+
+	for (const auto& s : Grupe) { // auto& s nurodo, kad s yra nuoroda i esama objekta, o ne kopija
+        out << left << setw(15) << s.vard << left << setw(15) << s.pav;
+        if (rez_pasirinkimas == 1)
+            out << right << setw(15) << fixed << setprecision(2) << s.rezVid << endl;
+        else if (rez_pasirinkimas == 2)
+            out << right << setw(15) << fixed << setprecision(2) << s.rezMed << endl;
+        else
+            out << right << setw(15) << fixed << setprecision(2) << s.rezVid
+            << right << setw(15) << fixed << setprecision(2) << s.rezMed << endl;
+    }
+
+    cout << "Rezultatai issaugoti faile: " << failoVardas << endl;
 }
