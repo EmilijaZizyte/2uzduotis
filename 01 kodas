@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -9,6 +10,7 @@
 #include <fstream>
 #include <limits>
 #include <chrono>
+#include <cstdio>
 
 using namespace std;
 
@@ -26,7 +28,7 @@ Studentas ivesk();
 double mediana(const vector<int>& v);
 void skaiciuokRezultatus(Studentas& s);
 void generuokFailus();
-void analizuokVisusFailusBuferiu();
+void analizuokVisusFailusMinimaliai();
 
 int main() {
     srand((unsigned)time(0));
@@ -37,8 +39,8 @@ int main() {
         cout << "1 - Prideti viena studenta\n";
         cout << "2 - Rodyti studentu rezultatus\n";
         cout << "3 - Baigti programa\n";
-        cout << "9 - Generuoti testinius failus\n";
-        cout << "10 - Nuskaityti visus failus su buferiu, skaiciuoti ir issaugoti rezultatus\n";
+        cout << "4 - Generuoti testinius failus\n";
+        cout << "5 - Nuskaityti visus failus su buferiu, skaiciuoti ir issaugoti rezultatus\n";
         cout << "Jusu pasirinkimas: ";
 
         int pasirinkimas;
@@ -86,11 +88,11 @@ int main() {
             cout << "Programa baigta.\n";
             break;
         }
-        else if (pasirinkimas == 9) {
+        else if (pasirinkimas == 4) {
             generuokFailus();
         }
-        else if (pasirinkimas == 10) {
-            analizuokVisusFailusBuferiu();
+        else if (pasirinkimas == 5) {
+            analizuokVisusFailusMinimaliai();
         }
         else {
             cout << "Netinkamas pasirinkimas.\n";
@@ -184,8 +186,14 @@ void generuokFailus() {
 
 
 
-void analizuokVisusFailusBuferiu() {
-    vector<string> failai = {"studentai1000.txt","studentai10000.txt","studentai100000.txt","studentai1000000.txt","studentai10000000.txt" };
+void analizuokVisusFailusMinimaliai() {
+    vector<string> failai = {
+        "studentai1000.txt",
+        "studentai10000.txt",
+        "studentai100000.txt",
+        "studentai1000000.txt",
+        "studentai10000000.txt"
+    };
 
     int rezPasirinkimas;
     cout << "\nKokius rezultatus spausdinti i failus?\n"
@@ -194,78 +202,85 @@ void analizuokVisusFailusBuferiu() {
 
     for (const string& failas : failai) {
         cout << "\n=== Apdorojamas failas: " << failas << " ===\n";
-        ifstream in(failas);
-        if (!in) { cout << "Nepavyko atidaryti failo!\n"; continue; }
 
-        auto start = chrono::high_resolution_clock::now();
-        stringstream buffer;
-        buffer << in.rdbuf();
-        in.close();
-        auto end = chrono::high_resolution_clock::now();
-        cout << "Failas nuskaitytas i buferi per " << chrono::duration<double>(end - start).count() << " s\n";
+        FILE* open_f = fopen(failas.c_str(), "r");
+        if (!open_f) {
+            cout << "Nepavyko atidaryti failo!\n";
+            continue;
+        }
 
-        vector<Studentas> Grupe;
-        string eil;
-        getline(buffer, eil); 
-        getline(buffer, eil); 
+        string base = failas.substr(0, failas.find(".txt"));
+        string proName = base + "_protinguliai.txt";
+        string kvaName = base + "_kvailiukai.txt";
 
-        start = chrono::high_resolution_clock::now();
-        while (getline(buffer, eil)) {
-            if (eil.empty()) continue;
+        ofstream outPro(proName), outKva(kvaName);
+
+        
+        auto spausdinkAntraste = [&](ofstream& out) {
+            out << left << setw(15) << "Vardas" << left << setw(15) << "Pavarde";
+            if (rezPasirinkimas == 1)
+                out << right << setw(15) << "Galutinis(Vid.)";
+            else if (rezPasirinkimas == 2)
+                out << right << setw(15) << "Galutinis(Med.)";
+            else
+                out << right << setw(15) << "Galutinis(Vid.)"
+                << right << setw(15) << "Galutinis(Med.)";
+            out << "\n" << string(15 + 15 + (rezPasirinkimas == 3 ? 30 : 15), '-') << "\n";
+            };
+        spausdinkAntraste(outPro);
+        spausdinkAntraste(outKva);
+
+        char eil_r[500];
+        int lineCounter = 0;
+
+        auto startRead = chrono::high_resolution_clock::now();
+        auto startCalc = startRead;  
+        auto startWrite = startRead;
+
+        double readTime = 0, calcTime = 0, writeTime = 0;
+
+        while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
+            auto t1 = chrono::high_resolution_clock::now();
+            lineCounter++;
+            if (lineCounter <= 2) continue; 
+            auto t2 = chrono::high_resolution_clock::now();
+            readTime += chrono::duration<double>(t2 - t1).count();
+
+            string eil(eil_r);
+
+            auto t3 = chrono::high_resolution_clock::now();
             stringstream ss(eil);
             Studentas s;
             ss >> s.vard >> s.pav;
             for (int i = 0; i < 5; i++) { int x; ss >> x; s.paz.push_back(x); }
             ss >> s.egzas;
             skaiciuokRezultatus(s);
-            Grupe.push_back(s);
+            auto t4 = chrono::high_resolution_clock::now();
+            calcTime += chrono::duration<double>(t4 - t3).count();
+
+            auto t5 = chrono::high_resolution_clock::now();
+            ofstream* out = (s.rezVid > 5 && s.rezMed > 5) ? &outPro : &outKva;
+            *out << left << setw(15) << s.vard << left << setw(15) << s.pav;
+            if (rezPasirinkimas == 1)
+                *out << right << setw(15) << fixed << setprecision(2) << s.rezVid;
+            else if (rezPasirinkimas == 2)
+                *out << right << setw(15) << fixed << setprecision(2) << s.rezMed;
+            else
+                *out << right << setw(15) << fixed << setprecision(2) << s.rezVid
+                << right << setw(15) << fixed << setprecision(2) << s.rezMed;
+            *out << "\n";
+            auto t6 = chrono::high_resolution_clock::now();
+            writeTime += chrono::duration<double>(t6 - t5).count();
         }
-        end = chrono::high_resolution_clock::now();
-        cout << "Rezultatai apskaiciuoti per " << chrono::duration<double>(end - start).count() << " s\n";
 
-        
-        vector<Studentas> protingi, kvaili;
-        for (auto& s : Grupe) {
-            if (s.rezVid > 5 && s.rezMed > 5) protingi.push_back(s);
-            else kvaili.push_back(s);
-        }
+        fclose(open_f);
 
-        
-        string base = failas.substr(0, failas.find(".txt"));
-        string pro = base + "protinguliai.txt";
-        string kva = base + "kvailiukai.txt";
-
-        auto write_start = chrono::high_resolution_clock::now();
-        ofstream out1(pro), out2(kva);
-
-        auto spausdink = [&](ofstream& out, vector<Studentas>& v) {
-            out << left << setw(15) << "Vardas" << left << setw(15) << "Pavarde";
-            if (rezPasirinkimas == 1) out << right << setw(15) << "Galutinis(Vid.)";
-            else if (rezPasirinkimas == 2) out << right << setw(15) << "Galutinis(Med.)";
-            else out << right << setw(15) << "Galutinis(Vid.)" << right << setw(15) << "Galutinis(Med.)";
-            out << "\n" << string(15 + 15 + (rezPasirinkimas == 3 ? 30 : 15), '-') << "\n";
-
-            for (auto& s : v) {
-                out << left << setw(15) << s.vard << left << setw(15) << s.pav;
-                if (rezPasirinkimas == 1)
-                    out << right << setw(15) << fixed << setprecision(2) << s.rezVid;
-                else if (rezPasirinkimas == 2)
-                    out << right << setw(15) << fixed << setprecision(2) << s.rezMed;
-                else
-                    out << right << setw(15) << fixed << setprecision(2) << s.rezVid
-                    << right << setw(15) << fixed << setprecision(2) << s.rezMed;
-                out << "\n";
-            }
-            };
-
-        spausdink(out1, protingi);
-        spausdink(out2, kvaili);
-
-        auto write_end = chrono::high_resolution_clock::now();
-        cout << "Failai irasyti per " << chrono::duration<double>(write_end - write_start).count() << " s\n";
-        cout << "  -> " << pro << " (" << protingi.size() << " protingi)\n";
-        cout << "  -> " << kva << " (" << kvaili.size() << " kvaili)\n";
+        cout << "Failas apdorotas!\n";
+        cout << "  Nuskaitymas: " << readTime << " s\n";
+        cout << "  Rezultatu skaiciavimas: " << calcTime << " s\n";
+        cout << "  Irasymas i failus: " << writeTime << " s\n";
+        cout << "  -> " << proName << "\n  -> " << kvaName << "\n";
     }
-
-    cout << "\nVisi failai apdoroti su buferiu!\n";
 }
+
+
