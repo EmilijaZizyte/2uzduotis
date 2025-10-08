@@ -200,6 +200,17 @@ void analizuokVisusFailusMinimaliai() {
         << "1 - Tik vidurki\n2 - Tik mediana\n3 - Abu\nPasirinkimas: ";
     cin >> rezPasirinkimas;
 
+    int rikiavimas;
+    cout << "Pagal ka rikiuoti galutinius rezultatus?\n"
+        << "1 - Vardas (A-Z)\n"
+        << "2 - Pavarde (A-Z)\n"
+        << "3 - Vidurkis didėjimo tvarka\n"
+        << "4 - Vidurkis mažėjimo tvarka\n"
+        << "5 - Mediana didėjimo tvarka\n"
+        << "6 - Mediana mažėjimo tvarka\n"
+        << "Pasirinkimas: ";
+    cin >> rikiavimas;
+
     for (const string& failas : failai) {
         cout << "\n=== Apdorojamas failas: " << failas << " ===\n";
 
@@ -215,7 +226,6 @@ void analizuokVisusFailusMinimaliai() {
 
         ofstream outPro(proName), outKva(kvaName);
 
-        
         auto spausdinkAntraste = [&](ofstream& out) {
             out << left << setw(15) << "Vardas" << left << setw(15) << "Pavarde";
             if (rezPasirinkimas == 1)
@@ -233,16 +243,15 @@ void analizuokVisusFailusMinimaliai() {
         char eil_r[500];
         int lineCounter = 0;
 
-        auto startRead = chrono::high_resolution_clock::now();
-        auto startCalc = startRead;  
-        auto startWrite = startRead;
-
         double readTime = 0, calcTime = 0, writeTime = 0;
+
+        
+        vector<Studentas> protingi, kvaili;
 
         while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
             auto t1 = chrono::high_resolution_clock::now();
             lineCounter++;
-            if (lineCounter <= 2) continue; 
+            if (lineCounter <= 2) continue; // praleidžiame antraštę ir brūkšnelius
             auto t2 = chrono::high_resolution_clock::now();
             readTime += chrono::duration<double>(t2 - t1).count();
 
@@ -258,22 +267,51 @@ void analizuokVisusFailusMinimaliai() {
             auto t4 = chrono::high_resolution_clock::now();
             calcTime += chrono::duration<double>(t4 - t3).count();
 
-            auto t5 = chrono::high_resolution_clock::now();
-            ofstream* out = (s.rezVid > 5 && s.rezMed > 5) ? &outPro : &outKva;
-            *out << left << setw(15) << s.vard << left << setw(15) << s.pav;
-            if (rezPasirinkimas == 1)
-                *out << right << setw(15) << fixed << setprecision(2) << s.rezVid;
-            else if (rezPasirinkimas == 2)
-                *out << right << setw(15) << fixed << setprecision(2) << s.rezMed;
-            else
-                *out << right << setw(15) << fixed << setprecision(2) << s.rezVid
-                << right << setw(15) << fixed << setprecision(2) << s.rezMed;
-            *out << "\n";
-            auto t6 = chrono::high_resolution_clock::now();
-            writeTime += chrono::duration<double>(t6 - t5).count();
+            
+            if (s.rezVid >= 5 && s.rezMed >= 5)
+                protingi.push_back(s);
+            else if (s.rezVid < 5 || s.rezMed < 5)
+                kvaili.push_back(s);
         }
 
         fclose(open_f);
+
+        
+        auto rikiuok = [&](vector<Studentas>& v) {
+            switch (rikiavimas) {
+            case 1: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.vard < b.vard; }); break;
+            case 2: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.pav < b.pav; }); break;
+            case 3: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.rezVid < b.rezVid; }); break;
+            case 4: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.rezVid > b.rezVid; }); break;
+            case 5: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.rezMed < b.rezMed; }); break;
+            case 6: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.rezMed > b.rezMed; }); break;
+            default: break;
+            }
+            };
+
+        rikiuok(protingi);
+        rikiuok(kvaili);
+
+        // Išvedimas į failus
+        auto spausdinkStudentus = [&](ofstream& out, const vector<Studentas>& v) {
+            for (auto& s : v) {
+                auto t5 = chrono::high_resolution_clock::now();
+                out << left << setw(15) << s.vard << left << setw(15) << s.pav;
+                if (rezPasirinkimas == 1)
+                    out << right << setw(15) << fixed << setprecision(2) << s.rezVid;
+                else if (rezPasirinkimas == 2)
+                    out << right << setw(15) << fixed << setprecision(2) << s.rezMed;
+                else
+                    out << right << setw(15) << fixed << setprecision(2) << s.rezVid
+                    << right << setw(15) << fixed << setprecision(2) << s.rezMed;
+                out << "\n";
+                auto t6 = chrono::high_resolution_clock::now();
+                writeTime += chrono::duration<double>(t6 - t5).count();
+            }
+            };
+
+        spausdinkStudentus(outPro, protingi);
+        spausdinkStudentus(outKva, kvaili);
 
         cout << "Failas apdorotas!\n";
         cout << "  Nuskaitymas: " << readTime << " s\n";
@@ -282,5 +320,4 @@ void analizuokVisusFailusMinimaliai() {
         cout << "  -> " << proName << "\n  -> " << kvaName << "\n";
     }
 }
-
 
