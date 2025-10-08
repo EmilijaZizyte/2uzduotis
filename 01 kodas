@@ -104,16 +104,65 @@ int main() {
 
 
 Studentas ivesk() {
-    Studentas Laik;
-    cout << "Iveskite varda: "; cin >> Laik.vard;
-    cout << "Iveskite pavarde: "; cin >> Laik.pav;
-    cout << "Iveskite 5 pazymius ir egzamino pazymi: ";
-    for (int i = 0; i < 5; i++) {
-        int p; cin >> p; Laik.paz.push_back(p);
+    Studentas Laik; 
+    string input; 
+
+    while (true) {
+        cout << "Iveskite varda: ";
+        cin >> Laik.vard;
+        bool valid = true;
+        for (size_t i = 0; i < Laik.vard.size(); i++) 
+            if (!isalpha(Laik.vard[i])) {
+                valid = false;
+                break;
+            }
+        if (valid) break;
+        cout << "Vardas gali tureti tik raides. Bandykite dar karta.\n";
     }
-    cin >> Laik.egzas;
+
+    while (true) {
+        cout << "Iveskite pavarde: ";
+        cin >> Laik.pav;
+        bool valid = true;
+        for (size_t i = 0; i < Laik.pav.size(); i++)
+            if (!isalpha(Laik.pav[i])) {
+                valid = false;
+                break;
+            }
+        if (valid) break;
+        cout << "Pavarde gali tureti tik raides. Bandykite dar karta\n";
+    }
+
+    cout << "Iveskite namu darbu pazymius (vienas per eilute). Baigti tuscia eilute (spauskite enter):\n";
+    cin.ignore(); 
+    while (true) {
+        getline(cin, input); 
+        if (input.empty()) break; 
+
+        stringstream ss(input);
+        int m;
+        string extra; 
+        
+
+        if (ss >> m && !(ss >> extra) && m >= 0 && m <= 10) { 
+            Laik.paz.push_back(m);
+        }
+        else {
+            cout << "Bloga ivestis! Iveskite skaiciu 0-10 arba tuscia eilute pabaigai\n";
+        }
+    }
+
+    while (true) {
+        cout << "Iveskite egzamina desimtbaleje sistemoje: ";
+        cin >> Laik.egzas;
+        if (!cin.fail() && Laik.egzas >= 0 && Laik.egzas <= 10) break;
+        cin.clear(); cin.ignore(10000, '\n');
+        cout << "Egzamino rezultatas turi buti 0-10! Bandykite dar karta.\n";
+    }
+
     return Laik;
 }
+
 
 double mediana(const vector<int>& v) {
     vector<int> t = v;
