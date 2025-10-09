@@ -253,10 +253,10 @@ void analizuokVisusFailusMinimaliai() {
     cout << "Pagal ka rikiuoti galutinius rezultatus?\n"
         << "1 - Vardas (A-Z)\n"
         << "2 - Pavarde (A-Z)\n"
-        << "3 - Vidurkis didėjimo tvarka\n"
-        << "4 - Vidurkis mažėjimo tvarka\n"
-        << "5 - Mediana didėjimo tvarka\n"
-        << "6 - Mediana mažėjimo tvarka\n"
+        << "3 - Vidurkis didejimo tvarka\n"
+        << "4 - Vidurkis mazejimo tvarka\n"
+        << "5 - Mediana didejimo tvarka\n"
+        << "6 - Mediana mazejimo tvarka\n"
         << "Pasirinkimas: ";
     cin >> rikiavimas;
 
@@ -274,6 +274,11 @@ void analizuokVisusFailusMinimaliai() {
         string kvaName = base + "_kvailiukai.txt";
 
         ofstream outPro(proName), outKva(kvaName);
+        if (!outPro || !outKva) {
+            cout << "Klaida: nepavyko sukurti rezultatų failų\n";
+            fclose(open_f);
+            continue;
+        }
 
         auto spausdinkAntraste = [&](ofstream& out) {
             out << left << setw(15) << "Vardas" << left << setw(15) << "Pavarde";
@@ -291,35 +296,37 @@ void analizuokVisusFailusMinimaliai() {
 
         char eil_r[500];
         int lineCounter = 0;
-
         double readTime = 0, calcTime = 0, writeTime = 0;
 
-        
         vector<Studentas> protingi, kvaili;
 
+        
         while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
-            auto t1 = chrono::high_resolution_clock::now();
             lineCounter++;
-            if (lineCounter <= 2) continue; // praleidžiame antraštę ir brūkšnelius
+            if (lineCounter <= 2) continue; 
+
+            auto t1 = chrono::high_resolution_clock::now();
+            string eil(eil_r);
             auto t2 = chrono::high_resolution_clock::now();
             readTime += chrono::duration<double>(t2 - t1).count();
-
-            string eil(eil_r);
 
             auto t3 = chrono::high_resolution_clock::now();
             stringstream ss(eil);
             Studentas s;
             ss >> s.vard >> s.pav;
-            for (int i = 0; i < 5; i++) { int x; ss >> x; s.paz.push_back(x); }
+            for (int i = 0; i < 5; i++) {
+                int x;
+                ss >> x;
+                s.paz.push_back(x);
+            }
             ss >> s.egzas;
             skaiciuokRezultatus(s);
             auto t4 = chrono::high_resolution_clock::now();
             calcTime += chrono::duration<double>(t4 - t3).count();
 
-            
             if (s.rezVid >= 5 && s.rezMed >= 5)
                 protingi.push_back(s);
-            else if (s.rezVid < 5 || s.rezMed < 5)
+            else
                 kvaili.push_back(s);
         }
 
@@ -328,12 +335,12 @@ void analizuokVisusFailusMinimaliai() {
         
         auto rikiuok = [&](vector<Studentas>& v) {
             switch (rikiavimas) {
-            case 1: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.vard < b.vard; }); break;
-            case 2: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.pav < b.pav; }); break;
-            case 3: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.rezVid < b.rezVid; }); break;
-            case 4: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.rezVid > b.rezVid; }); break;
-            case 5: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.rezMed < b.rezMed; }); break;
-            case 6: sort(v.begin(), v.end(), [](Studentas a, Studentas b) { return a.rezMed > b.rezMed; }); break;
+            case 1: sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.vard < b.vard; }); break;
+            case 2: sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.pav < b.pav; }); break;
+            case 3: sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.rezVid < b.rezVid; }); break;
+            case 4: sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.rezVid > b.rezVid; }); break;
+            case 5: sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.rezMed < b.rezMed; }); break;
+            case 6: sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.rezMed > b.rezMed; }); break;
             default: break;
             }
             };
@@ -341,8 +348,8 @@ void analizuokVisusFailusMinimaliai() {
         rikiuok(protingi);
         rikiuok(kvaili);
 
-        // Išvedimas į failus
-        auto spausdinkStudentus = [&](ofstream& out, const vector<Studentas>& v) {
+        
+        auto spausdink = [&](ofstream& out, const vector<Studentas>& v) {
             for (auto& s : v) {
                 auto t5 = chrono::high_resolution_clock::now();
                 out << left << setw(15) << s.vard << left << setw(15) << s.pav;
@@ -359,14 +366,16 @@ void analizuokVisusFailusMinimaliai() {
             }
             };
 
-        spausdinkStudentus(outPro, protingi);
-        spausdinkStudentus(outKva, kvaili);
+        spausdink(outPro, protingi);
+        spausdink(outKva, kvaili);
+
+        outPro.close();
+        outKva.close();
 
         cout << "Failas apdorotas!\n";
-        cout << "  Nuskaitymas: " << readTime << " s\n";
-        cout << "  Rezultatu skaiciavimas: " << calcTime << " s\n";
-        cout << "  Irasymas i failus: " << writeTime << " s\n";
+        cout << "  Nuskaitymas: " << fixed << setprecision(3) << readTime << " s\n";
+        cout << "  Skaiciavimas: " << fixed << setprecision(3) << calcTime << " s\n";
+        cout << "  irasymas i failus: " << fixed << setprecision(3) << writeTime << " s\n";
         cout << "  -> " << proName << "\n  -> " << kvaName << "\n";
     }
 }
-
