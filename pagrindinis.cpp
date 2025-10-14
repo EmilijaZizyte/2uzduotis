@@ -4,32 +4,30 @@
 #include "studentas.h"
 #include "failai.h"
 
-using namespace std;
-
 int main() {
-    srand(static_cast<unsigned>(time(0)));
-    vector<Studentas> Grupe;
+    std::srand(static_cast<unsigned>(std::time(0)));
+    std::vector<Studentas> Grupe;
 
     while (true) {
-        cout << "\nPasirinkite:\n";
-        cout << "1 - Prideti viena studenta\n";
-        cout << "2 - Rodyti studentu rezultatus\n";
-        cout << "3 - Baigti programa\n";
-        cout << "4 - Generuoti testinius failus\n";
-        cout << "5 - Nuskaityti visus failus\n";
-        cout << "Jusu pasirinkimas: ";
+        std::cout << "\nPasirinkite:\n";
+        std::cout << "1 - Prideti viena studenta\n";
+        std::cout << "2 - Rodyti studentu rezultatus\n";
+        std::cout << "3 - Baigti programa\n";
+        std::cout << "4 - Generuoti testinius failus\n";
+        std::cout << "5 - Nuskaityti visus failus\n";
+        std::cout << "Jusu pasirinkimas: ";
 
         int pasirinkimas;
-        cin >> pasirinkimas;
+        std::cin >> pasirinkimas;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "Bandykite dar karta.\n";
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            std::cout << "Bandykite dar karta.\n";
             continue;
         }
 
-        cin.ignore(10000, '\n'); 
+        std::cin.ignore(10000, '\n'); 
 
         if (pasirinkimas == 1) {
             pridetiStudenta(Grupe);
@@ -38,7 +36,7 @@ int main() {
             rodytiRezultatus(Grupe);
         }
         else if (pasirinkimas == 3) {
-            cout << "Programa baigta.\n";
+            std::cout << "Programa baigta.\n";
             break;
         }
         else if (pasirinkimas == 4) {
@@ -48,7 +46,7 @@ int main() {
             analizuokVisusFailusMinimaliai();
         }
         else {
-            cout << "Netinkamas pasirinkimas. Bandykite dar karta.\n";
+            std::cout << "Netinkamas pasirinkimas. Bandykite dar karta.\n";
         }
     }
 
