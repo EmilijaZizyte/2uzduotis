@@ -2,6 +2,7 @@
 #include "failai.h"
 #pragma execution_character_set("utf-8")
 #include <fstream>
+#include <list>
 
 void generuokFailus() {
     std::vector<long long> dydziai = { 1000, 10000, 100000, 1000000, 10000000 };
@@ -115,11 +116,11 @@ void analizuokVisusFailusMinimaliai() {
         int lineCounter = 0;
         double readTime = 0, calcTime = 0, writeTime = 0;
 
-        std::vector<Studentas> protingi, kvaili;
+        std::list<Studentas> protingi, kvaili;
 
         while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
             lineCounter++;
-            if (lineCounter <= 2) continue; 
+            if (lineCounter <= 2) continue;
 
             auto t1 = std::chrono::high_resolution_clock::now();
             std::string eil(eil_r);
@@ -148,14 +149,14 @@ void analizuokVisusFailusMinimaliai() {
 
         fclose(open_f);
 
-        auto rikiuok = [&](std::vector<Studentas>& v) {
+        auto rikiuok = [&](std::list<Studentas>& lst) {
             switch (rikiavimas) {
-            case 1: std::sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.vard < b.vard; }); break;
-            case 2: std::sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.pav < b.pav; }); break;
-            case 3: std::sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.rezVid < b.rezVid; }); break;
-            case 4: std::sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.rezVid > b.rezVid; }); break;
-            case 5: std::sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.rezMed < b.rezMed; }); break;
-            case 6: std::sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.rezMed > b.rezMed; }); break;
+            case 1: lst.sort([](auto& a, auto& b) { return a.vard < b.vard; }); break;
+            case 2: lst.sort([](auto& a, auto& b) { return a.pav < b.pav; }); break;
+            case 3: lst.sort([](auto& a, auto& b) { return a.rezVid < b.rezVid; }); break;
+            case 4: lst.sort([](auto& a, auto& b) { return a.rezVid > b.rezVid; }); break;
+            case 5: lst.sort([](auto& a, auto& b) { return a.rezMed < b.rezMed; }); break;
+            case 6: lst.sort([](auto& a, auto& b) { return a.rezMed > b.rezMed; }); break;
             default: break;
             }
         };
@@ -163,8 +164,8 @@ void analizuokVisusFailusMinimaliai() {
         rikiuok(protingi);
         rikiuok(kvaili);
 
-        auto spausdink = [&](std::ofstream& out, const std::vector<Studentas>& v) {
-            for (auto& s : v) {
+        auto spausdink = [&](std::ofstream& out, const std::list<Studentas>& lst) {
+            for (const auto& s : lst) {
                 auto t5 = std::chrono::high_resolution_clock::now();
                 out << std::left << std::setw(15) << s.vard << std::left << std::setw(15) << s.pav;
                 if (rezPasirinkimas == 1)
