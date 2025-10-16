@@ -99,272 +99,173 @@ void analizuokVisusFailusMinimaliai() {
         }
 
         auto spausdinkAntraste = [&](std::ofstream& out) {
-            out << std::left << std::setw(15) << "Vardas" << std::left << std::setw(15) << "Pavarde";
+            out << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde";
             if (rezPasirinkimas == 1)
-                out << std::right << std::setw(15) << "Galutinis(Vid.)";
+                out << std::setw(15) << "Galutinis(Vid.)";
             else if (rezPasirinkimas == 2)
-                out << std::right << std::setw(15) << "Galutinis(Med.)";
+                out << std::setw(15) << "Galutinis(Med.)";
             else
-                out << std::right << std::setw(15) << "Galutinis(Vid.)"
-                    << std::right << std::setw(15) << "Galutinis(Med.)";
+                out << std::setw(15) << "Galutinis(Vid.)"
+                << std::setw(15) << "Galutinis(Med.)";
             out << "\n" << std::string(15 + 15 + (rezPasirinkimas == 3 ? 30 : 15), '-') << "\n";
-        };
+            };
         spausdinkAntraste(outPro);
         spausdinkAntraste(outKva);
 
         char eil_r[500];
         int lineCounter = 0;
-        double readTime = 0, calcTime = 0, writeTime = 0;
 
-        std::list<Studentas> protingi, kvaili;
+        // Vector & List
+        std::vector<Studentas> protingiVector, kvailiVector;
+        std::list<Studentas> protingiList, kvailiList;
+
+        double readTimeVector = 0, calcTimeVector = 0, splitTimeVector = 0, sortTimeVector = 0;
+        double readTimeList = 0, calcTimeList = 0, splitTimeList = 0, sortTimeList = 0;
+
+        // Nauji atskiri rašymo laikai
+        double writeTimeVectorProtingi = 0, writeTimeVectorKvaili = 0;
+        double writeTimeListProtingi = 0, writeTimeListKvaili = 0;
 
         while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
             lineCounter++;
             if (lineCounter <= 2) continue;
 
-            auto t1 = std::chrono::high_resolution_clock::now();
             std::string eil(eil_r);
-            auto t2 = std::chrono::high_resolution_clock::now();
-            readTime += std::chrono::duration<double>(t2 - t1).count();
 
-            auto t3 = std::chrono::high_resolution_clock::now();
-            std::stringstream ss(eil);
-            Studentas s;
-            ss >> s.vard >> s.pav;
-            for (int i = 0; i < 5; i++) {
-                int x;
-                ss >> x;
-                s.paz.push_back(x);
-            }
-            ss >> s.egzas;
-            skaiciuokRezultatus(s);
-            auto t4 = std::chrono::high_resolution_clock::now();
-            calcTime += std::chrono::duration<double>(t4 - t3).count();
+            // Vector skaitymas
+            auto t1v = std::chrono::high_resolution_clock::now();
+            Studentas sVector;
+            std::stringstream ssV(eil);
+            ssV >> sVector.vard >> sVector.pav;
+            for (int i = 0; i < 5; i++) { int x; ssV >> x; sVector.paz.push_back(x); }
+            ssV >> sVector.egzas;
+            auto t2v = std::chrono::high_resolution_clock::now();
+            readTimeVector += std::chrono::duration<double>(t2v - t1v).count();
 
-            if (s.rezVid >= 5 && s.rezMed >= 5)
-                protingi.push_back(s);
+            auto t3v = std::chrono::high_resolution_clock::now();
+            skaiciuokRezultatus(sVector);
+            auto t4v = std::chrono::high_resolution_clock::now();
+            calcTimeVector += std::chrono::duration<double>(t4v - t3v).count();
+
+            auto tSplitV1 = std::chrono::high_resolution_clock::now();
+            if (sVector.rezVid >= 5 && sVector.rezMed >= 5)
+                protingiVector.push_back(sVector);
             else
-                kvaili.push_back(s);
+                kvailiVector.push_back(sVector);
+            auto tSplitV2 = std::chrono::high_resolution_clock::now();
+            splitTimeVector += std::chrono::duration<double>(tSplitV2 - tSplitV1).count();
+
+            // List skaitymas
+            auto t1l = std::chrono::high_resolution_clock::now();
+            Studentas sList;
+            std::stringstream ssL(eil);
+            ssL >> sList.vard >> sList.pav;
+            for (int i = 0; i < 5; i++) { int x; ssL >> x; sList.paz.push_back(x); }
+            ssL >> sList.egzas;
+            auto t2l = std::chrono::high_resolution_clock::now();
+            readTimeList += std::chrono::duration<double>(t2l - t1l).count();
+
+            auto t3l = std::chrono::high_resolution_clock::now();
+            skaiciuokRezultatus(sList);
+            auto t4l = std::chrono::high_resolution_clock::now();
+            calcTimeList += std::chrono::duration<double>(t4l - t3l).count();
+
+            auto tSplitL1 = std::chrono::high_resolution_clock::now();
+            if (sList.rezVid >= 5 && sList.rezMed >= 5)
+                protingiList.push_back(sList);
+            else
+                kvailiList.push_back(sList);
+            auto tSplitL2 = std::chrono::high_resolution_clock::now();
+            splitTimeList += std::chrono::duration<double>(tSplitL2 - tSplitL1).count();
         }
 
         fclose(open_f);
 
-        auto rikiuok = [&](std::list<Studentas>& lst) {
-            switch (rikiavimas) {
-            case 1: lst.sort([](auto& a, auto& b) { return a.vard < b.vard; }); break;
-            case 2: lst.sort([](auto& a, auto& b) { return a.pav < b.pav; }); break;
-            case 3: lst.sort([](auto& a, auto& b) { return a.rezVid < b.rezVid; }); break;
-            case 4: lst.sort([](auto& a, auto& b) { return a.rezVid > b.rezVid; }); break;
-            case 5: lst.sort([](auto& a, auto& b) { return a.rezMed < b.rezMed; }); break;
-            case 6: lst.sort([](auto& a, auto& b) { return a.rezMed > b.rezMed; }); break;
-            default: break;
-            }
-        };
+        // Rikiavimai
+        auto sortStartV = std::chrono::high_resolution_clock::now();
+        std::sort(protingiVector.begin(), protingiVector.end(), [](auto& a, auto& b) { return a.vard < b.vard; });
+        std::sort(kvailiVector.begin(), kvailiVector.end(), [](auto& a, auto& b) { return a.vard < b.vard; });
+        auto sortEndV = std::chrono::high_resolution_clock::now();
+        sortTimeVector = std::chrono::duration<double>(sortEndV - sortStartV).count();
 
-        rikiuok(protingi);
-        rikiuok(kvaili);
+        auto sortStartL = std::chrono::high_resolution_clock::now();
+        protingiList.sort([](auto& a, auto& b) { return a.vard < b.vard; });
+        kvailiList.sort([](auto& a, auto& b) { return a.vard < b.vard; });
+        auto sortEndL = std::chrono::high_resolution_clock::now();
+        sortTimeList = std::chrono::duration<double>(sortEndL - sortStartL).count();
 
-        auto spausdink = [&](std::ofstream& out, const std::list<Studentas>& lst) {
-            for (const auto& s : lst) {
-                auto t5 = std::chrono::high_resolution_clock::now();
-                out << std::left << std::setw(15) << s.vard << std::left << std::setw(15) << s.pav;
+        // Spausdinimas
+        auto spausdinkVector = [&](std::ofstream& out, const std::vector<Studentas>& v) {
+            for (auto& s : v) {
+                out << std::left << std::setw(15) << s.vard
+                    << std::setw(15) << s.pav;
                 if (rezPasirinkimas == 1)
-                    out << std::right << std::setw(15) << std::fixed << std::setprecision(2) << s.rezVid;
+                    out << std::setw(15) << s.rezVid;
                 else if (rezPasirinkimas == 2)
-                    out << std::right << std::setw(15) << std::fixed << std::setprecision(2) << s.rezMed;
+                    out << std::setw(15) << s.rezMed;
                 else
-                    out << std::right << std::setw(15) << std::fixed << std::setprecision(2) << s.rezVid
-                        << std::right << std::setw(15) << std::fixed << std::setprecision(2) << s.rezMed;
+                    out << std::setw(15) << s.rezVid
+                    << std::setw(15) << s.rezMed;
                 out << "\n";
-                auto t6 = std::chrono::high_resolution_clock::now();
-                writeTime += std::chrono::duration<double>(t6 - t5).count();
             }
-        };
+            };
+        auto spausdinkList = [&](std::ofstream& out, const std::list<Studentas>& lst) {
+            for (auto& s : lst) {
+                out << std::left << std::setw(15) << s.vard
+                    << std::setw(15) << s.pav;
+                if (rezPasirinkimas == 1)
+                    out << std::setw(15) << s.rezVid;
+                else if (rezPasirinkimas == 2)
+                    out << std::setw(15) << s.rezMed;
+                else
+                    out << std::setw(15) << s.rezVid
+                    << std::setw(15) << s.rezMed;
+                out << "\n";
+            }
+            };
 
-        spausdink(outPro, protingi);
-        spausdink(outKva, kvaili);
+        // --- RAŠYMO LAIKO MATAVIMAS ---
+        auto tVPro1 = std::chrono::high_resolution_clock::now();
+        spausdinkVector(outPro, protingiVector);
+        auto tVPro2 = std::chrono::high_resolution_clock::now();
+        writeTimeVectorProtingi = std::chrono::duration<double>(tVPro2 - tVPro1).count();
+
+        auto tVKva1 = std::chrono::high_resolution_clock::now();
+        spausdinkVector(outKva, kvailiVector);
+        auto tVKva2 = std::chrono::high_resolution_clock::now();
+        writeTimeVectorKvaili = std::chrono::duration<double>(tVKva2 - tVKva1).count();
+
+        auto tLPro1 = std::chrono::high_resolution_clock::now();
+        spausdinkList(outPro, protingiList);
+        auto tLPro2 = std::chrono::high_resolution_clock::now();
+        writeTimeListProtingi = std::chrono::duration<double>(tLPro2 - tLPro1).count();
+
+        auto tLKva1 = std::chrono::high_resolution_clock::now();
+        spausdinkList(outKva, kvailiList);
+        auto tLKva2 = std::chrono::high_resolution_clock::now();
+        writeTimeListKvaili = std::chrono::duration<double>(tLKva2 - tLKva1).count();
 
         outPro.close();
         outKva.close();
 
-        std::cout << "Failas apdorotas!\n";
-        std::cout << "  Nuskaitymas: " << std::fixed << std::setprecision(3) << readTime << " s\n";
-        std::cout << "  Skaiciavimas: " << std::fixed << std::setprecision(3) << calcTime << " s\n";
-        std::cout << "  irasymas i failus: " << std::fixed << std::setprecision(3) << writeTime << " s\n";
-        std::cout << "  -> " << proName << "\n  -> " << kvaName << "\n";
+        // --- IŠVESTIS ---
+        if (protingiVector.size() == protingiList.size() && kvailiVector.size() == kvailiList.size())
+            std::cout << " Rezultatai sutampa (" << protingiVector.size() + kvailiVector.size() << " įrašų)\n";
+
+        std::cout << "Vector: Skaitymas=" << readTimeVector
+            << "s, Skaičiavimas=" << calcTimeVector
+            << "s, Skirstymas=" << splitTimeVector
+            << "s, Rikiavimas=" << sortTimeVector << "s\n";
+        std::cout << "   Rašymas į protingus: " << writeTimeVectorProtingi << "s\n";
+        std::cout << "   Rašymas į kvailiukus: " << writeTimeVectorKvaili << "s\n";
+
+        std::cout << "List:   Skaitymas=" << readTimeList
+            << "s, Skaičiavimas=" << calcTimeList
+            << "s, Skirstymas=" << splitTimeList
+            << "s, Rikiavimas=" << sortTimeList << "s\n";
+        std::cout << "   Rašymas į protingus: " << writeTimeListProtingi << "s\n";
+        std::cout << "   Rašymas į kvailiukus: " << writeTimeListKvaili << "s\n";
     }
 }
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <list>
-#include <string>
-#include <chrono>
-#include <cstdio>
-using namespace std;
-
-struct Studentas {
-    string vard;
-    string pav;
-    list<int> paz;
-    int egzas;
-    double rezVid;
-    double rezMed;
-};
-
-// Tarkime, kad ši funkcija apskaičiuoja rezultatus
-void skaiciuokRezultatus(Studentas& s) {
-    double sum = 0;
-    for (int p : s.paz) sum += p;
-    s.rezVid = sum / s.paz.size() * 0.4 + s.egzas * 0.6;
-
-    list<int> tmp = s.paz;
-    tmp.sort();
-    auto it = tmp.begin();
-    advance(it, tmp.size() / 2);
-    s.rezMed = *it * 0.4 + s.egzas * 0.6;
-}
-
-void analizuokVisusFailusMinimaliaiList() {
-    list<string> failai = {
-        "studentai1000.txt",
-        "studentai10000.txt",
-        "studentai100000.txt",
-        "studentai1000000.txt",
-        "studentai10000000.txt"
-    };
-
-    int rezPasirinkimas;
-    cout << "\nKokius rezultatus spausdinti i failus?\n"
-        << "1 - Tik vidurki\n2 - Tik mediana\n3 - Abu\nPasirinkimas: ";
-    cin >> rezPasirinkimas;
-
-    int rikiavimas;
-    cout << "Pagal ka rikiuoti galutinius rezultatus?\n"
-        << "1 - Vardas (A-Z)\n"
-        << "2 - Pavarde (A-Z)\n"
-        << "3 - Vidurkis didejimo tvarka\n"
-        << "4 - Vidurkis mazejimo tvarka\n"
-        << "5 - Mediana didejimo tvarka\n"
-        << "6 - Mediana mazejimo tvarka\n"
-        << "Pasirinkimas: ";
-    cin >> rikiavimas;
-
-    for (const string& failas : failai) {
-        cout << "\n=== Apdorojamas failas: " << failas << " ===\n";
-
-        FILE* open_f = fopen(failas.c_str(), "r");
-        if (!open_f) {
-            cout << "Nepavyko atidaryti failo!\n";
-            continue;
-        }
-
-        string base = failas.substr(0, failas.find(".txt"));
-        string proName = base + "_protinguliai.txt";
-        string kvaName = base + "_kvailiukai.txt";
-
-        ofstream outPro(proName), outKva(kvaName);
-        if (!outPro || !outKva) {
-            cout << "Klaida: nepavyko sukurti rezultatų failų\n";
-            fclose(open_f);
-            continue;
-        }
-
-        auto spausdinkAntraste = [&](ofstream& out) {
-            out << left << setw(15) << "Vardas" << left << setw(15) << "Pavarde";
-            if (rezPasirinkimas == 1)
-                out << right << setw(15) << "Galutinis(Vid.)";
-            else if (rezPasirinkimas == 2)
-                out << right << setw(15) << "Galutinis(Med.)";
-            else
-                out << right << setw(15) << "Galutinis(Vid.)"
-                << right << setw(15) << "Galutinis(Med.)";
-            out << "\n" << string(15 + 15 + (rezPasirinkimas == 3 ? 30 : 15), '-') << "\n";
-        };
-        spausdinkAntraste(outPro);
-        spausdinkAntraste(outKva);
-
-        char eil_r[500];
-        int lineCounter = 0;
-        double readTime = 0, calcTime = 0, writeTime = 0;
-
-        list<Studentas> protingi, kvaili;
-
-        while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
-            lineCounter++;
-            if (lineCounter <= 2) continue;
-
-            auto t1 = chrono::high_resolution_clock::now();
-            string eil(eil_r);
-            auto t2 = chrono::high_resolution_clock::now();
-            readTime += chrono::duration<double>(t2 - t1).count();
-
-            auto t3 = chrono::high_resolution_clock::now();
-            stringstream ss(eil);
-            Studentas s;
-            ss >> s.vard >> s.pav;
-            for (int i = 0; i < 5; i++) {
-                int x;
-                ss >> x;
-                s.paz.push_back(x);
-            }
-            ss >> s.egzas;
-            skaiciuokRezultatus(s);
-            auto t4 = chrono::high_resolution_clock::now();
-            calcTime += chrono::duration<double>(t4 - t3).count();
-
-            if (s.rezVid >= 5 && s.rezMed >= 5)
-                protingi.push_back(s);
-            else
-                kvaili.push_back(s);
-        }
-
-        fclose(open_f);
-
-        auto rikiuok = [&](list<Studentas>& l) {
-            switch (rikiavimas) {
-            case 1: l.sort([](auto& a, auto& b) { return a.vard < b.vard; }); break;
-            case 2: l.sort([](auto& a, auto& b) { return a.pav < b.pav; }); break;
-            case 3: l.sort([](auto& a, auto& b) { return a.rezVid < b.rezVid; }); break;
-            case 4: l.sort([](auto& a, auto& b) { return a.rezVid > b.rezVid; }); break;
-            case 5: l.sort([](auto& a, auto& b) { return a.rezMed < b.rezMed; }); break;
-            case 6: l.sort([](auto& a, auto& b) { return a.rezMed > b.rezMed; }); break;
-            default: break;
-            }
-        };
-
-        rikiuok(protingi);
-        rikiuok(kvaili);
-
-        auto spausdink = [&](ofstream& out, const list<Studentas>& l) {
-            for (auto& s : l) {
-                auto t5 = chrono::high_resolution_clock::now();
-                out << left << setw(15) << s.vard << left << setw(15) << s.pav;
-                if (rezPasirinkimas == 1)
-                    out << right << setw(15) << fixed << setprecision(2) << s.rezVid;
-                else if (rezPasirinkimas == 2)
-                    out << right << setw(15) << fixed << setprecision(2) << s.rezMed;
-                else
-                    out << right << setw(15) << fixed << setprecision(2) << s.rezVid
-                        << right << setw(15) << fixed << setprecision(2) << s.rezMed;
-                out << "\n";
-                auto t6 = chrono::high_resolution_clock::now();
-                writeTime += chrono::duration<double>(t6 - t5).count();
-            }
-        };
-
-        spausdink(outPro, protingi);
-        spausdink(outKva, kvaili);
-
-        outPro.close();
-        outKva.close();
-
-        cout << "Failas apdorotas!\n";
-        cout << "  Nuskaitymas: " << fixed << setprecision(3) << readTime << " s\n";
-        cout << "  Skaiciavimas: " << fixed << setprecision(3) << calcTime << " s\n";
-        cout << "  irasymas i failus: " << fixed << setprecision(3) << writeTime << " s\n";
-        cout << "  -> " << proName << "\n  -> " << kvaName << "\n";
-    }
-}
+pridek reservavima
 
