@@ -194,3 +194,177 @@ void analizuokVisusFailusMinimaliai() {
         std::cout << "  -> " << proName << "\n  -> " << kvaName << "\n";
     }
 }
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <list>
+#include <string>
+#include <chrono>
+#include <cstdio>
+using namespace std;
+
+struct Studentas {
+    string vard;
+    string pav;
+    list<int> paz;
+    int egzas;
+    double rezVid;
+    double rezMed;
+};
+
+// Tarkime, kad ši funkcija apskaičiuoja rezultatus
+void skaiciuokRezultatus(Studentas& s) {
+    double sum = 0;
+    for (int p : s.paz) sum += p;
+    s.rezVid = sum / s.paz.size() * 0.4 + s.egzas * 0.6;
+
+    list<int> tmp = s.paz;
+    tmp.sort();
+    auto it = tmp.begin();
+    advance(it, tmp.size() / 2);
+    s.rezMed = *it * 0.4 + s.egzas * 0.6;
+}
+
+void analizuokVisusFailusMinimaliaiList() {
+    list<string> failai = {
+        "studentai1000.txt",
+        "studentai10000.txt",
+        "studentai100000.txt",
+        "studentai1000000.txt",
+        "studentai10000000.txt"
+    };
+
+    int rezPasirinkimas;
+    cout << "\nKokius rezultatus spausdinti i failus?\n"
+        << "1 - Tik vidurki\n2 - Tik mediana\n3 - Abu\nPasirinkimas: ";
+    cin >> rezPasirinkimas;
+
+    int rikiavimas;
+    cout << "Pagal ka rikiuoti galutinius rezultatus?\n"
+        << "1 - Vardas (A-Z)\n"
+        << "2 - Pavarde (A-Z)\n"
+        << "3 - Vidurkis didejimo tvarka\n"
+        << "4 - Vidurkis mazejimo tvarka\n"
+        << "5 - Mediana didejimo tvarka\n"
+        << "6 - Mediana mazejimo tvarka\n"
+        << "Pasirinkimas: ";
+    cin >> rikiavimas;
+
+    for (const string& failas : failai) {
+        cout << "\n=== Apdorojamas failas: " << failas << " ===\n";
+
+        FILE* open_f = fopen(failas.c_str(), "r");
+        if (!open_f) {
+            cout << "Nepavyko atidaryti failo!\n";
+            continue;
+        }
+
+        string base = failas.substr(0, failas.find(".txt"));
+        string proName = base + "_protinguliai.txt";
+        string kvaName = base + "_kvailiukai.txt";
+
+        ofstream outPro(proName), outKva(kvaName);
+        if (!outPro || !outKva) {
+            cout << "Klaida: nepavyko sukurti rezultatų failų\n";
+            fclose(open_f);
+            continue;
+        }
+
+        auto spausdinkAntraste = [&](ofstream& out) {
+            out << left << setw(15) << "Vardas" << left << setw(15) << "Pavarde";
+            if (rezPasirinkimas == 1)
+                out << right << setw(15) << "Galutinis(Vid.)";
+            else if (rezPasirinkimas == 2)
+                out << right << setw(15) << "Galutinis(Med.)";
+            else
+                out << right << setw(15) << "Galutinis(Vid.)"
+                << right << setw(15) << "Galutinis(Med.)";
+            out << "\n" << string(15 + 15 + (rezPasirinkimas == 3 ? 30 : 15), '-') << "\n";
+        };
+        spausdinkAntraste(outPro);
+        spausdinkAntraste(outKva);
+
+        char eil_r[500];
+        int lineCounter = 0;
+        double readTime = 0, calcTime = 0, writeTime = 0;
+
+        list<Studentas> protingi, kvaili;
+
+        while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
+            lineCounter++;
+            if (lineCounter <= 2) continue;
+
+            auto t1 = chrono::high_resolution_clock::now();
+            string eil(eil_r);
+            auto t2 = chrono::high_resolution_clock::now();
+            readTime += chrono::duration<double>(t2 - t1).count();
+
+            auto t3 = chrono::high_resolution_clock::now();
+            stringstream ss(eil);
+            Studentas s;
+            ss >> s.vard >> s.pav;
+            for (int i = 0; i < 5; i++) {
+                int x;
+                ss >> x;
+                s.paz.push_back(x);
+            }
+            ss >> s.egzas;
+            skaiciuokRezultatus(s);
+            auto t4 = chrono::high_resolution_clock::now();
+            calcTime += chrono::duration<double>(t4 - t3).count();
+
+            if (s.rezVid >= 5 && s.rezMed >= 5)
+                protingi.push_back(s);
+            else
+                kvaili.push_back(s);
+        }
+
+        fclose(open_f);
+
+        auto rikiuok = [&](list<Studentas>& l) {
+            switch (rikiavimas) {
+            case 1: l.sort([](auto& a, auto& b) { return a.vard < b.vard; }); break;
+            case 2: l.sort([](auto& a, auto& b) { return a.pav < b.pav; }); break;
+            case 3: l.sort([](auto& a, auto& b) { return a.rezVid < b.rezVid; }); break;
+            case 4: l.sort([](auto& a, auto& b) { return a.rezVid > b.rezVid; }); break;
+            case 5: l.sort([](auto& a, auto& b) { return a.rezMed < b.rezMed; }); break;
+            case 6: l.sort([](auto& a, auto& b) { return a.rezMed > b.rezMed; }); break;
+            default: break;
+            }
+        };
+
+        rikiuok(protingi);
+        rikiuok(kvaili);
+
+        auto spausdink = [&](ofstream& out, const list<Studentas>& l) {
+            for (auto& s : l) {
+                auto t5 = chrono::high_resolution_clock::now();
+                out << left << setw(15) << s.vard << left << setw(15) << s.pav;
+                if (rezPasirinkimas == 1)
+                    out << right << setw(15) << fixed << setprecision(2) << s.rezVid;
+                else if (rezPasirinkimas == 2)
+                    out << right << setw(15) << fixed << setprecision(2) << s.rezMed;
+                else
+                    out << right << setw(15) << fixed << setprecision(2) << s.rezVid
+                        << right << setw(15) << fixed << setprecision(2) << s.rezMed;
+                out << "\n";
+                auto t6 = chrono::high_resolution_clock::now();
+                writeTime += chrono::duration<double>(t6 - t5).count();
+            }
+        };
+
+        spausdink(outPro, protingi);
+        spausdink(outKva, kvaili);
+
+        outPro.close();
+        outKva.close();
+
+        cout << "Failas apdorotas!\n";
+        cout << "  Nuskaitymas: " << fixed << setprecision(3) << readTime << " s\n";
+        cout << "  Skaiciavimas: " << fixed << setprecision(3) << calcTime << " s\n";
+        cout << "  irasymas i failus: " << fixed << setprecision(3) << writeTime << " s\n";
+        cout << "  -> " << proName << "\n  -> " << kvaName << "\n";
+    }
+}
+
