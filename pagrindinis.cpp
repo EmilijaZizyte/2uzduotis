@@ -1,12 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <list>
 #include "studentas.h"
 #include "failai.h"
 
 int main() {
     std::srand(static_cast<unsigned>(std::time(0)));
-    std::vector<Studentas> Grupe;
+    std::vector<Studentas> GrupeVector;
+    std::list<Studentas> GrupeList;
 
     while (true) {
         std::cout << "\nPasirinkite:\n";
@@ -27,13 +29,23 @@ int main() {
             continue;
         }
 
-        std::cin.ignore(10000, '\n'); 
+        std::cin.ignore(10000, '\n');
 
         if (pasirinkimas == 1) {
-            pridetiStudenta(Grupe);
+            std::cout << "\n=== Ivedimas ir issaugojimas ===\n";
+            Studentas s = ivesk();
+
+            GrupeVector.push_back(s);
+            std::cout << "Studentas '" << s.vard << " " << s.pav
+                << "' issaugotas vectoriuje adresu: " << &GrupeVector.back() << "\n";
+
+            GrupeList.push_back(s);
+            std::cout << "Studentas '" << s.vard << " " << s.pav
+                << "' issaugotas liste adresu: " << &GrupeList.back() << "\n";
         }
+
         else if (pasirinkimas == 2) {
-            rodytiRezultatus(Grupe);
+            rodytiRezultatus(GrupeVector);
         }
         else if (pasirinkimas == 3) {
             std::cout << "Programa baigta.\n";
@@ -44,6 +56,7 @@ int main() {
         }
         else if (pasirinkimas == 5) {
             analizuokVisusFailusMinimaliai();
+           
         }
         else {
             std::cout << "Netinkamas pasirinkimas. Bandykite dar karta.\n";
