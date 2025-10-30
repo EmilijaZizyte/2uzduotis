@@ -1,55 +1,201 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "failai.h"
-#pragma execution_character_set("utf-8")
 #include <fstream>
-
+#include <iostream>
+#include <vector>
+#include <list>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
+#include <chrono>
 void generuokFailus() {
-    std::vector<long long> dydziai = { 1000, 10000, 100000, 1000000, 10000000 };
-    std::cout << "\nPradedamas testiniu failu generavimas...\n";
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    auto viso_pradzia = std::chrono::high_resolution_clock::now();
+    std::string failoVardas;
+    int kiek;
+    std::cout << "Iveskite failo pavadinima: ";
+    std::cin >> failoVardas;
+    std::cout << "Kiek studentu generuoti? ";
+    std::cin >> kiek;
 
-    for (long long kiekis : dydziai) {
-        std::string pavadinimas = "studentai" + std::to_string(kiekis) + ".txt";
-
-        auto pradzia = std::chrono::high_resolution_clock::now();
-        std::ofstream out(pavadinimas);
-        if (!out) {
-            std::cout << "Nepavyko sukurti failo: " << pavadinimas << std::endl;
-            continue;
-        }
-
-        out << std::left << std::setw(15) << "Vardas" << std::left << std::setw(15) << "Pavarde";
-        for (int i = 1; i <= 5; i++)
-            out << std::right << std::setw(6) << ("ND" + std::to_string(i));
-        out << std::right << std::setw(6) << "Egz" << "\n";
-        out << std::string(15 + 15 + 6 * 6, '-') << "\n";
-
-        for (long long i = 0; i < kiekis; i++) {
-            int vardSkaicius = std::rand() % 10000;
-            int pavSkaicius = std::rand() % 10000;
-            out << std::left << std::setw(15) << ("vardas" + std::to_string(vardSkaicius))
-                << std::left << std::setw(15) << ("pavarde" + std::to_string(pavSkaicius));
-            for (int j = 0; j < 5; j++)
-                out << std::right << std::setw(6) << (std::rand() % 11);
-            out << std::right << std::setw(6) << (std::rand() % 11) << "\n";
-        }
-
-        out.close();
-        auto pabaiga = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> trukme = pabaiga - pradzia;
-
-        std::cout << "Sugeneruota: " << pavadinimas
-            << "  (" << kiekis << " irasu) per "
-            << std::fixed << std::setprecision(3) << trukme.count() << " s\n";
+    std::ofstream out(failoVardas);
+    if (!out) {
+        std::cout << "Nepavyko sukurti failo!\n";
+        return;
     }
 
-    auto viso_pabaiga = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> viso_trukme = viso_pabaiga - viso_pradzia;
+    // Header
+    out << std::left << std::setw(15) << "Vardas"
+        << std::setw(15) << "Pavarde"
+        << "ND1 ND2 ND3 ND4 ND5 Egzaminas\n";
 
-    std::cout << "\nFailu generavimas baigtas per "
-        << std::fixed << std::setprecision(3) << viso_trukme.count() << " s.\n";
+    for (int i = 0; i < kiek; ++i) {
+        std::string vard = "vardas" + std::to_string(rand() % 1000);
+        std::string pav = "pavarde" + std::to_string(rand() % 1000);
+
+        out << std::left << std::setw(15) << vard
+            << std::setw(15) << pav;
+
+        for (int j = 0; j < 5; ++j) out << rand() % 11 << " "; // ND
+        out << rand() % 11 << "\n"; // Egzaminas
+    }
+
+    out.close();
+    std::cout << "Failas '" << failoVardas << "' sugeneruotas su " << kiek << " studentu.\n";
 }
+void skaiciuokRezultatusFailui(Studentas& s) {
+    if (s.paz.empty()) { s.rezVid = s.rezMed = 0; return; }
+    double suma = std::accumulate(s.paz.begin(), s.paz.end(), 0.0);
+    double vid = suma / s.paz.size();
+    s.rezVid = 0.4 * vid + 0.6 * s.egzas;
+    s.rezMed = 0.4 * mediana(s.paz) + 0.6 * s.egzas;
+}
+
+void testuokStrategijas() {
+    using namespace std;
+
+    int rezPasirinkimas;
+    cout << "\nKokius rezultatus spausdinti?\n1 - Vidurkis\n2 - Mediana\n3 - Abu\nPasirinkimas: ";
+    cin >> rezPasirinkimas;
+
+    int rikiavimas;
+    cout << "\nRikiavimas:\n1 - Vardas\n2 - Pavarde\n3 - Vidurkis ↑\n4 - Vidurkis ↓\n5 - Mediana ↑\n6 - Mediana ↓\nPasirinkimas: ";
+    cin >> rikiavimas;
+
+    int strategija;
+    cout << "\nStrategija:\n1 - Pirma\n2 - Antra\n3 - Palyginti abi\nPasirinkimas: ";
+    cin >> strategija;
+
+    string failas;
+    cout << "Failo pavadinimas: ";
+    cin >> failas;
+
+    ifstream in(failas);
+    if (!in) {
+        cout << "Nepavyko atidaryti failo!\n";
+        return;
+    }
+
+    vector<Studentas> visiV;
+    list<Studentas> visiL;
+    string eil;
+    int line = 0;
+
+    while (getline(in, eil)) {
+        line++;
+        if (line <= 2) continue;
+
+        stringstream ss(eil);
+        Studentas s;
+        s.paz.resize(5);
+        ss >> s.vard >> s.pav;
+        for (int i = 0; i < 5; i++) ss >> s.paz[i];
+        ss >> s.egzas;
+        skaiciuokRezultatusFailui(s);
+
+        visiV.push_back(s);
+        visiL.push_back(s);
+    }
+
+    auto cmp = [&](const Studentas& a, const Studentas& b) -> bool {
+        switch (rikiavimas) {
+        case 1: return a.vard < b.vard;
+        case 2: return a.pav < b.pav;
+        case 3: return a.rezVid < b.rezVid;
+        case 4: return a.rezVid > b.rezVid;
+        case 5: return a.rezMed < b.rezMed;
+        case 6: return a.rezMed > b.rezMed;
+        default: return a.vard < b.vard;
+        }
+        };
+
+    auto paleisti = [&](int stratID, double& vecTime, double& listTime, bool useSTL = false) {
+        vector<Studentas> v = visiV;
+        list<Studentas> l = visiL;
+        vector<Studentas> kietiV, vargsiV;
+        list<Studentas> kietiL, vargsiL;
+
+        auto tStart = chrono::high_resolution_clock::now();
+
+        if (!useSTL) {
+            if (stratID == 1) {
+                for (auto& s : v) (s.rezVid >= 5 && s.rezMed >= 5 ? kietiV : vargsiV).push_back(s);
+                for (auto& s : l) (s.rezVid >= 5 && s.rezMed >= 5 ? kietiL : vargsiL).push_back(s);
+            }
+            else {
+                for (auto& s : v) if (s.rezVid < 5 || s.rezMed < 5) vargsiV.push_back(s);
+                v.erase(remove_if(v.begin(), v.end(), [](const Studentas& s) { return s.rezVid < 5 || s.rezMed < 5; }), v.end());
+                kietiV = v;
+
+                for (auto it = l.begin(); it != l.end();) {
+                    if (it->rezVid < 5 || it->rezMed < 5) { vargsiL.push_back(*it); it = l.erase(it); }
+                    else ++it;
+                }
+                kietiL = l;
+            }
+        }
+        else {
+            copy_if(v.begin(), v.end(), back_inserter(kietiV), [](const Studentas& s) { return s.rezVid >= 5 && s.rezMed >= 5; });
+            copy_if(v.begin(), v.end(), back_inserter(vargsiV), [](const Studentas& s) { return s.rezVid < 5 || s.rezMed < 5; });
+            copy_if(l.begin(), l.end(), back_inserter(kietiL), [](const Studentas& s) { return s.rezVid >= 5 && s.rezMed >= 5; });
+            copy_if(l.begin(), l.end(), back_inserter(vargsiL), [](const Studentas& s) { return s.rezVid < 5 || s.rezMed < 5; });
+        }
+
+        auto tEnd = chrono::high_resolution_clock::now();
+        vecTime = chrono::duration<double>(tEnd - tStart).count();
+        listTime = vecTime;
+
+        tStart = chrono::high_resolution_clock::now();
+        sort(kietiV.begin(), kietiV.end(), cmp);
+        sort(vargsiV.begin(), vargsiV.end(), cmp);
+        kietiL.sort(cmp);
+        vargsiL.sort(cmp);
+        tEnd = chrono::high_resolution_clock::now();
+        vecTime += chrono::duration<double>(tEnd - tStart).count();
+        listTime += chrono::duration<double>(tEnd - tStart).count();
+
+        return make_pair(vecTime, listTime);
+        };
+
+    if (strategija == 1 || strategija == 2) {
+        double v, l;
+        auto times = paleisti(strategija, v, l);
+        cout << "\nVECTOR: " << times.first << " s\nLIST: " << times.second << " s\n";
+        return;
+    }
+
+    double v1 = 0, l1 = 0, v2 = 0, l2 = 0;
+
+    cout << "--- 1 strategija ---\n";
+    tie(v1, l1) = paleisti(1, v1, l1);
+    cout << "VECTOR: " << v1 << " s\nLIST: " << l1 << " s\n";
+
+    cout << "--- 2 strategija ---\n";
+    tie(v2, l2) = paleisti(2, v2, l2);
+    cout << "VECTOR: " << v2 << " s\nLIST:   " << l2 << " s\n";
+
+    cout << "\nGreitesnė strategija VECTOR: " << (v1 < v2 ? "1" : "2") << "\n";
+    cout << "Greitesnė strategija LIST: " << (l1 < l2 ? "1" : "2") << "\n";
+
+    // Antras paleidimas su STL algoritmais
+    cout << "\n--- Antras paleidimas su STL algoritmais ---\n";
+
+    double vSTL = 0, lSTL = 0;
+    if (v1 < v2) tie(vSTL, ignore) = paleisti(1, vSTL, lSTL, true);
+    else tie(vSTL, ignore) = paleisti(2, vSTL, lSTL, true);
+
+    double lSTLTime = 0;
+    if (l1 < l2) tie(ignore, lSTLTime) = paleisti(1, vSTL, lSTLTime, true);
+    else tie(ignore, lSTLTime) = paleisti(2, vSTL, lSTLTime, true);
+
+    cout << "\nVECTOR (STL): " << vSTL << " s, greičiau nei be STL? " << (vSTL < min(v1, v2) ? "Taip" : "Ne") << "\n";
+    cout << "LIST (STL): " << lSTLTime << " s, greičiau nei be STL? " << (lSTLTime < min(l1, l2) ? "Taip" : "Ne") << "\n";
+}
+
+
+
+
 
 
 void analizuokVisusFailusMinimaliai() {
@@ -141,7 +287,7 @@ void analizuokVisusFailusMinimaliai() {
     rikiuokV(protingiV);
     rikiuokV(kvailiV);
 
-    
+
     std::string proNameVector = base + "_protinguliai_vector.txt";
     std::string kvaNameVector = base + "_kvailiukai_vector.txt";
     std::ofstream outProV(proNameVector), outKvaV(kvaNameVector);
@@ -172,7 +318,7 @@ void analizuokVisusFailusMinimaliai() {
     std::cout << "  Skaiciavimas: " << calcTimeV << " s\n";
     std::cout << "  Rasymas: " << writeTimeV << " s\n";
 
-   
+
     FILE* open_f2 = fopen(failas.c_str(), "r");
     if (!open_f2) {
         std::cout << "Nepavyko atidaryti failo antram skaitymui (list)!\n";
