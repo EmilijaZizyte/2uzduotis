@@ -17,6 +17,7 @@ int main() {
         std::cout << "3 - Baigti programa\n";
         std::cout << "4 - Generuoti testinius failus\n";
         std::cout << "5 - Nuskaityti visus failus\n";
+        std::cout << "6 - Testuoti strategijas\n";
         std::cout << "Jusu pasirinkimas: ";
 
         int pasirinkimas;
@@ -57,6 +58,26 @@ int main() {
         else if (pasirinkimas == 5) {
             analizuokVisusFailusMinimaliai();
            
+        }
+        else if (pasirinkimas == 6) {
+            int strategija;
+            std::cout << "Kurios strategijos noretumet: 1, 2, 3\n";
+            std::cin >> strategija;
+
+            if (strategija == 1) {
+                strategija1_skaidymas();
+            }
+            else if (strategija == 2) {
+                Strategija2();
+            }
+            else if (strategija == 3) {
+                strategija3();
+            }
+            else {
+                std::cout << "Netinkamas pasirinkimas. Bandykite dar karta.\n";
+            }
+
+
         }
         else {
             std::cout << "Netinkamas pasirinkimas. Bandykite dar karta.\n";
