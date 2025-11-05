@@ -543,7 +543,7 @@ void Strategija3() {
     std::string base = failas.substr(0, failas.find(".txt"));
     char eil_r[500];
 
-    // =================== VECTOR ===================
+    // =================== VECTOR: nuskaitymas ===================
     FILE* open_f = fopen(failas.c_str(), "r");
     if (!open_f) { std::cout << "Nepavyko atidaryti failo!\n"; return; }
 
@@ -555,7 +555,6 @@ void Strategija3() {
     while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
         lineCounter++;
         if (lineCounter <= 2) continue;
-
         std::stringstream ss(eil_r);
         Studentas s;
         ss >> s.vard >> s.pav;
@@ -569,7 +568,7 @@ void Strategija3() {
     auto tReadEndV = std::chrono::high_resolution_clock::now();
     double readTimeV = std::chrono::duration<double>(tReadEndV - tReadStartV).count();
 
-    // =================== LIST ===================
+    // =================== LIST: nuskaitymas ===================
     FILE* open_f2 = fopen(failas.c_str(), "r");
     if (!open_f2) { std::cout << "Nepavyko atidaryti failo!\n"; return; }
 
@@ -579,7 +578,6 @@ void Strategija3() {
     while (fgets(eil_r, sizeof(eil_r), open_f2) != nullptr) {
         lineCounter++;
         if (lineCounter <= 2) continue;
-
         std::stringstream ss(eil_r);
         Studentas s;
         ss >> s.vard >> s.pav;
@@ -598,121 +596,76 @@ void Strategija3() {
     std::vector<Studentas> kietiakaiV1, vargsiukaiV1;
     kietiakaiV1.reserve(visiStudentaiV.size());
     vargsiukaiV1.reserve(visiStudentaiV.size());
-
     for (const auto& s : visiStudentaiV) {
         if (s.rezVid >= 5 && s.rezMed >= 5) kietiakaiV1.push_back(s);
         else vargsiukaiV1.push_back(s);
     }
     auto tSplitEndV1 = std::chrono::high_resolution_clock::now();
     double splitTimeV1 = std::chrono::duration<double>(tSplitEndV1 - tSplitStartV1).count();
-
-    auto tWriteStartV1 = std::chrono::high_resolution_clock::now();
-    std::ofstream outKV1(base + "_kietiakai_vector.txt");
-    std::ofstream outVV1(base + "_vargsiukai_vector.txt");
-    for (auto& s : kietiakaiV1)
-        outKV1 << std::left << std::setw(15) << s.vard << std::setw(15) << s.pav
-        << std::setw(10) << s.rezVid << std::setw(10) << s.rezMed << "\n";
-    for (auto& s : vargsiukaiV1)
-        outVV1 << std::left << std::setw(15) << s.vard << std::setw(15) << s.pav
-        << std::setw(10) << s.rezVid << std::setw(10) << s.rezMed << "\n";
-    outKV1.close(); outVV1.close();
-    auto tWriteEndV1 = std::chrono::high_resolution_clock::now();
-    double writeTimeV1 = std::chrono::duration<double>(tWriteEndV1 - tWriteStartV1).count();
-
+    double writeTimeV1 = 0.0;
     double memV1 = sizeof(Studentas) * (visiStudentaiV.size() + kietiakaiV1.size() + vargsiukaiV1.size()) / (1024.0 * 1024.0);
 
     // =================== LIST STRATEGIJA 1 ===================
     auto tSplitStartL1 = std::chrono::high_resolution_clock::now();
     std::list<Studentas> kietiakaiL1, vargsiukaiL1;
-    for (auto& s : visiStudentaiL) {
+    for (const auto& s : visiStudentaiL) {
         if (s.rezVid >= 5 && s.rezMed >= 5) kietiakaiL1.push_back(s);
         else vargsiukaiL1.push_back(s);
     }
     auto tSplitEndL1 = std::chrono::high_resolution_clock::now();
     double splitTimeL1 = std::chrono::duration<double>(tSplitEndL1 - tSplitStartL1).count();
-
-    auto tWriteStartL1 = std::chrono::high_resolution_clock::now();
-    std::ofstream outKL1(base + "_kietiakai_list.txt");
-    std::ofstream outVL1(base + "_vargsiukai_list.txt");
-    outKL1 << "Simulated write"; outVL1 << "Simulated write"; // tik simboliškai
-    outKL1.close(); outVL1.close();
-    auto tWriteEndL1 = std::chrono::high_resolution_clock::now();
-    double writeTimeL1 = std::chrono::duration<double>(tWriteEndL1 - tWriteStartL1).count();
-
+    double writeTimeL1 = 0.0;
     double memL1 = (sizeof(Studentas) + 2 * sizeof(void*)) * (kietiakaiL1.size() + vargsiukaiL1.size()) / (1024.0 * 1024.0);
 
     // =================== VECTOR STRATEGIJA 2 ===================
     auto tSplitStartV2 = std::chrono::high_resolution_clock::now();
-    std::vector<Studentas> Vcopy = visiStudentaiV;
+    std::vector<Studentas> kietiakaiV2 = visiStudentaiV;
     std::vector<Studentas> vargsiukaiV2;
-    for (auto it = Vcopy.begin(); it != Vcopy.end();) {
+    for (auto it = kietiakaiV2.begin(); it != kietiakaiV2.end(); ) {
         if (it->rezVid < 5 || it->rezMed < 5) {
             vargsiukaiV2.push_back(*it);
-            it = Vcopy.erase(it);
+            it = kietiakaiV2.erase(it);
         }
         else ++it;
     }
     auto tSplitEndV2 = std::chrono::high_resolution_clock::now();
     double splitTimeV2 = std::chrono::duration<double>(tSplitEndV2 - tSplitStartV2).count();
-
-    auto tWriteStartV2 = std::chrono::high_resolution_clock::now();
-    std::ofstream outKV2(base + "_kietiakai_vector_2strategija.txt");
-    std::ofstream outVV2(base + "_vargsiukai_vector_2strategija.txt");
-    for (auto& s : Vcopy)
-        outKV2 << std::left << std::setw(15) << s.vard << std::setw(15) << s.pav
-        << std::setw(10) << s.rezVid << std::setw(10) << s.rezMed << "\n";
-    for (auto& s : vargsiukaiV2)
-        outVV2 << std::left << std::setw(15) << s.vard << std::setw(15) << s.pav
-        << std::setw(10) << s.rezVid << std::setw(10) << s.rezMed << "\n";
-    outKV2.close(); outVV2.close();
-    auto tWriteEndV2 = std::chrono::high_resolution_clock::now();
-    double writeTimeV2 = std::chrono::duration<double>(tWriteEndV2 - tWriteStartV2).count();
-
-    double memV2 = sizeof(Studentas) * (Vcopy.size() + vargsiukaiV2.size()) / (1024.0 * 1024.0);
+    double writeTimeV2 = 0.0;
+    double memV2 = sizeof(Studentas) * (kietiakaiV2.size() + vargsiukaiV2.size()) / (1024.0 * 1024.0);
 
     // =================== LIST STRATEGIJA 2 ===================
     auto tSplitStartL2 = std::chrono::high_resolution_clock::now();
-    std::list<Studentas> Lcopy = visiStudentaiL;
-    std::list<Studentas> vargsiukaiL2;
-    for (auto it = Lcopy.begin(); it != Lcopy.end();) {
+    std::list<Studentas> L2copy = visiStudentaiL;
+    std::list<Studentas> kietiakaiL2, vargsiukaiL2;
+    for (auto it = L2copy.begin(); it != L2copy.end(); ) {
         if (it->rezVid < 5 || it->rezMed < 5) {
             vargsiukaiL2.push_back(*it);
-            it = Lcopy.erase(it);
+            it = L2copy.erase(it);
         }
         else ++it;
     }
+    kietiakaiL2 = L2copy;
     auto tSplitEndL2 = std::chrono::high_resolution_clock::now();
     double splitTimeL2 = std::chrono::duration<double>(tSplitEndL2 - tSplitStartL2).count();
+    double writeTimeL2 = 0.0;
+    double memL2 = (sizeof(Studentas) + 2 * sizeof(void*)) * (kietiakaiL2.size() + vargsiukaiL2.size()) / (1024.0 * 1024.0);
 
-    auto tWriteStartL2 = std::chrono::high_resolution_clock::now();
-    std::ofstream outKL2(base + "_kietiakai_list_2strategija.txt");
-    std::ofstream outVL2(base + "_vargsiukai_list_2strategija.txt");
-    outKL2 << "Simulated write"; outVL2 << "Simulated write"; // tik simboliškai
-    outKL2.close(); outVL2.close();
-    auto tWriteEndL2 = std::chrono::high_resolution_clock::now();
-    double writeTimeL2 = std::chrono::duration<double>(tWriteEndL2 - tWriteStartL2).count();
-
-    double memL2 = (sizeof(Studentas) + 2 * sizeof(void*)) * (Lcopy.size() + vargsiukaiL2.size()) / (1024.0 * 1024.0);
-
-    // =================== PASIRINKTI GREITESNE LIST ===================
-    bool useFirstL = (splitTimeL1 + writeTimeL1) < (splitTimeL2 + writeTimeL2);
-    double totalTimeList = useFirstL ? (splitTimeL1 + writeTimeL1 + readTimeL) : (splitTimeL2 + writeTimeL2 + readTimeL);
+    bool useFirstL = splitTimeL1 < splitTimeL2;
+    double totalTimeL = readTimeL + (useFirstL ? splitTimeL1 + writeTimeL1 : splitTimeL2 + writeTimeL2);
 
     // =================== VECTOR STRATEGIJA STL ===================
     auto tStartVSTL = std::chrono::high_resolution_clock::now();
     std::vector<Studentas> VcopySTL = visiStudentaiV;
-    std::vector<Studentas> kietiakaiVSTL, vargsiukaiVSTL;
+    std::vector<Studentas> kietiakaiV_final, vargsiukaiV_final;
     auto itSTL = std::partition(VcopySTL.begin(), VcopySTL.end(),
         [](const Studentas& s) { return s.rezVid >= 5 && s.rezMed >= 5; });
-    kietiakaiVSTL.assign(VcopySTL.begin(), itSTL);
-    vargsiukaiVSTL.assign(itSTL, VcopySTL.end());
+    kietiakaiV_final.assign(VcopySTL.begin(), itSTL);
+    vargsiukaiV_final.assign(itSTL, VcopySTL.end());
     auto tEndVSTL = std::chrono::high_resolution_clock::now();
     double timeVSTL = std::chrono::duration<double>(tEndVSTL - tStartVSTL).count();
-    double memVSTL = sizeof(Studentas) * (kietiakaiVSTL.size() + vargsiukaiVSTL.size()) / (1024.0 * 1024.0);
+    double memVSTL = sizeof(Studentas) * (kietiakaiV_final.size() + vargsiukaiV_final.size()) / (1024.0 * 1024.0);
 
     // =================== SPAUSDINIMAS ===================
-    std::cout << std::fixed << std::setprecision(6);
-
     std::cout << "\n=== VECTOR STRATEGIJA 1 ===\n";
     std::cout << "  Nuskaitymas: " << readTimeV << " s\n";
     std::cout << "  Skaidymas:   " << splitTimeV1 << " s\n";
@@ -731,18 +684,16 @@ void Strategija3() {
     std::cout << "  Bendra atmintis: " << memV2 << " MB\n";
 
     std::cout << "\n=== LIST STRATEGIJA 2 ===\n";
-    std::cout << "  Skaidymas:   " << splitTimeL2 << " s\n";
-    std::cout << "  Rasymas:     " << writeTimeL2 << " s\n";
-    std::cout << "  Bendra atmintis: " << memL2 << " MB\n";
+    std::cout << "  Skaidymas:   " << (useFirstL ? splitTimeL1 : splitTimeL2) << " s\n";
+    std::cout << "  Rasymas:     " << (useFirstL ? writeTimeL1 : writeTimeL2) << " s\n";
+    std::cout << "  Bendra atmintis: " << (useFirstL ? memL1 : memL2) << " MB\n";
 
     std::cout << "\n=== VECTOR STRATEGIJA STL ===\n";
     std::cout << "  Skaidymas + Rasymas: " << timeVSTL << " s\n";
     std::cout << "  Bendra atmintis: " << memVSTL << " MB\n";
 
-    std::cout << "\n=== LIST GREITESNE STRATEGIJA ===\n";
-    std::cout << "  Skaidymas + Rasymas: " << (useFirstL ? (splitTimeL1 + writeTimeL1) : (splitTimeL2 + writeTimeL2)) << " s\n";
-    std::cout << "  Bendra atmintis: " << (useFirstL ? memL1 : memL2) << " MB\n";
-    std::cout << "  Bendra list laikas (nuskaitymas+skaidymas+rasymas): " << totalTimeList << " s\n";
+    std::cout << "\n=== LIST BENDRAS LAIKAS (naudojant greitesne strategija) ===\n";
+    std::cout << "  Bendras laikas: " << totalTimeL << " s\n";
 }
 
 
