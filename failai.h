@@ -2,13 +2,20 @@
 #include "studentas.h"
 #include <fstream>
 #include <chrono>
-#include <cstdio>
 #include <vector>
+#include <list>
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
+#include <functional>
 
 void generuokFailus();
 void analizuokVisusFailusMinimaliai();
+void testuokStrategijas();
+void strategija1_skaidymas();
+void Strategija2();
+void strategija1_STL_vectoriui();
+void Strategija2_STL_vectoriui();
+void strategija3();
