@@ -57,20 +57,20 @@
 ## Kaip sukompiliuoti ir paleisti programą
 
 1.Atidarykite komandų eilutę (cmd) ir eikite į projekto katalogą, kuriame yra CMakeLists.txt. 
--Pavyzdžiui:
--cd C:\Users\computer\Desktop\cmake
+- Pavyzdžiui:
+- cd C:\Users\computer\Desktop\cmake
 
 2.Sugeneruokite build failus su CMake komanda:
--cmake .\CMakeLists.txt
+- cmake .\CMakeLists.txt
 
 3.Skompiliuokite projektą:
--cmake --build build
+- cmake --build build
 
 4.Pereikite į katalogą, kuriame sukurtas vykdomasis failas:
--cd C:\Users\computer\Desktop\cmake\build\Debug
+- cd C:\Users\computer\Desktop\cmake\build\Debug
 
 5.Paleiskite programą:
--Studentu_programa.exe
+- Studentu_programa.exe
 
 
 
