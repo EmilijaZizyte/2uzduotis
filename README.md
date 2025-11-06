@@ -50,24 +50,24 @@
    - Spauskite „Next“ -> „Install“ ir palaukite, kol diegimas baigsis
 
 5. Patikrinkite diegimą:  
-   Atidarykite „Command Prompt“ arba „PowerShell“ ir įveskite:
-   cmake --version
+   -Atidarykite „Command Prompt“ arba „PowerShell“ ir įveskite:
+   -cmake --version
 
    
 ## Kaip sukompiliuoti ir paleisti programą
 
-Atidarykite komandų eilutę (cmd) ir eikite į projekto katalogą, kuriame yra CMakeLists.txt. 
-Pavyzdžiui:
-cd C:\Users\computer\Desktop\cmake
+1.Atidarykite komandų eilutę (cmd) ir eikite į projekto katalogą, kuriame yra CMakeLists.txt. 
+-Pavyzdžiui:
+-cd C:\Users\computer\Desktop\cmake
 
-Sugeneruokite build failus su CMake komanda:
-cmake .\CMakeLists.txt
+2.Sugeneruokite build failus su CMake komanda:
+-cmake .\CMakeLists.txt
 
-Skompiliuokite projektą:
-cmake --build build
+3.Skompiliuokite projektą:
+-cmake --build build
 
-Pereikite į katalogą, kuriame sukurtas vykdomasis failas:
-cd C:\Users\computer\Desktop\cmake\build\Debug
+4.Pereikite į katalogą, kuriame sukurtas vykdomasis failas:
+-cd C:\Users\computer\Desktop\cmake\build\Debug
 
-Paleiskite programą:
-Studentu_programa.exe
+5.Paleiskite programą:
+-Studentu_programa.exe
