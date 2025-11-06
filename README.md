@@ -1,4 +1,4 @@
-# Studentų apdorojimo rezultatu palyginimas
+# Studentų apdorojimo rezultatu palyginimas V1.0
 
 
 
@@ -71,3 +71,14 @@
 
 5.Paleiskite programą:
 -Studentu_programa.exe
+
+
+
+##V0.1
+Programa dirba su studentų sąrašu: leidžia įvesti arba sugeneruoti studentus, skaičiuoti galutinius balus pagal vidurkį ar medianą, ir saugoti rezultatus į failą. Ji palaiko tiek mažų, tiek labai didelių failų nuskaitymą. Didelių failų atveju rezultatai automatiškai išsaugomi į failą, kad nebūtų spausdinama milijonai eilučių į konsolę. Programa turi meniu su pasirinkimais pridėti studentą, rodyti rezultatus, skaityti failą ir skaičiuoti egzaminų išlaikymą/neišlaikymą. Papildomos funkcijos tikrina įvesties teisingumą (vardai, pavardės, pažymiai) ir skaičiuoja mediana bei vidurkį, užtikrindamos patikimus rezultatus.
+
+##V0.2
+Programa valdo studentų duomenis: leidžia įvesti arba generuoti studentus, skaičiuoja galutinį vidurkį ir medianą, rodo rezultatus konsolėje, generuoja tekstinius failus su atsitiktiniais duomenimis ir analizuoja juos, rūšiuodama pagal vardą, pavardę, vidurkį arba medianą bei skirstydama studentus į „protingus“ ir „kvailiukus“. Nuo praeito releaso skiriasi, nes yra pridėtas spartos rezultatai, yra pridėtas matavimas du kartus ir matavimas kitame kompiuteryje
+
+##V0.3
+Ši programa padeda tvarkyti studentų rezultatus. Joje galima įvesti studentų duomenis ranka arba sugeneruoti atsitiktinius, o programa apskaičiuoja galutinius pažymius pagal namų darbų vidurkį ir medianą. Rezultatus galima peržiūrėti lentelėje arba sugeneruoti testinius failus su tūkstančiais studentų. Programa taip pat gali nuskaityti tokius failus, apdoroti visus studentus, rikiuoti pagal vardą, pavardę ar galutinį pažymį ir padalinti į grupes „protingi“ ir „kvailiukai“, kurių rezultatai įrašomi į naujus failus. Visa tai valdomas paprastu meniu, todėl lengva tvarkyti tiek mažą, tiek didelę duomenų apimtį.
