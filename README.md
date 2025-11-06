@@ -1,8 +1,8 @@
-# 📊 Studentų apdorojimo rezultatų palyginimas
+# Studentų apdorojimo rezultatu palyginimas
 
-**Pastaba:** reikšmės apvalintos iki 5 reikšmingų skaitmenų; atmintis MB; laikas sekundėmis.
 
-| Studentų kiekis | Struktūra | Strategija | Nuskaitymas (s) | Skaidymas (s) | Rašymas (s) | Atmintis (MB) | Kietiakai | Vargsiukai |
+
+| Studentu kiekis | Struktura | Strategija | Nuskaitymas (s) | Skaidymas (s) | Rašymas (s) | Atmintis (MB) | Kietiakai | Vargsiukai |
 |----------------:|:----------|:------------|----------------:|---------------:|-------------:|---------------:|-----------:|-----------:|
 | **1 000** | Vector | 1 | 0.00429 | 0.00016 | 0.00396 | 0.21 | 507 | 493 |
 |  | List | 1 | 0.00 | 0.00 | 0.01 | 0.24 | 507 | 493 |
@@ -29,3 +29,45 @@
 |  | Vector | 2 | 46.00 | 4213.0 | 20.00 | 1259.0 | 4,811,300 | 5,188,700 |
 |  | List | 2 | 44.00 | 1.00 | 20.00 | 1411.0 | 4,811,300 | 5,188,700 |
 |  | Vector (STL) | 1 | 43.00 | 2.00 | 21.00 | 1
+
+
+
+## 1. CMake diegimas Windows sistemoje naudojant .msi paketą
+
+1. Eikite į oficialų CMake atsisiuntimo puslapį:  
+   https://cmake.org/download/
+
+2. Pasirinkite tinkamą paketą:  
+   - Windows ×64 Installer (.msi) versija  
+   - Pavyzdžiui: `cmake-3.25-windows-x86_64.msi`
+
+3. Paleiskite diegimo failą:  
+   - Dukart spustelėkite atsisiųstą `.msi` failą  
+   
+4. Diegimo metu nustatykite parametrus:  
+   - Pažymėkite „Add CMake to the system PATH for all users“  
+   - Pasirinkite diegimo vietą (pagal nutylėjimą: `C:\Program Files\CMake\`)  
+   - Spauskite „Next“ -> „Install“ ir palaukite, kol diegimas baigsis
+
+5. Patikrinkite diegimą:  
+   Atidarykite „Command Prompt“ arba „PowerShell“ ir įveskite:
+   cmake --version
+
+   
+## Kaip sukompiliuoti ir paleisti programą
+
+Atidarykite komandų eilutę (cmd) ir eikite į projekto katalogą, kuriame yra CMakeLists.txt. 
+Pavyzdžiui:
+cd C:\Users\computer\Desktop\cmake
+
+Sugeneruokite build failus su CMake komanda:
+cmake .\CMakeLists.txt
+
+Skompiliuokite projektą:
+cmake --build build
+
+Pereikite į katalogą, kuriame sukurtas vykdomasis failas:
+cd C:\Users\computer\Desktop\cmake\build\Debug
+
+Paleiskite programą:
+Studentu_programa.exe
