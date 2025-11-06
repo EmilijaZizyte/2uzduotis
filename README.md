@@ -1,75 +1,36 @@
-# Testavimas v0.3
-
-`std::vector` konteinerio rezultatai
-
-#### **studentai1000.txt**
-
-Skaitymas=0.0230352s, 
-Skaiciavimas=0.0023418s
-  Rašymas ─» protingus: 0.0058303s
-  Ršíymas ─» kvailiukus: 0.007463s
-
-#### **studentai10000.txt**
-
-Skaitymas=0.239193s, Skaiciavimas=0.0246797s
-  Rašymas ─» protingus: 0.0554056s
-  Rašymas ─» kvailiukus: 0.0670942s
+# Apdorojimo rezultatų palyginimas
 
 
-#### **studentai100000.txt**
+## Santrauka (1 000 / 10 000 / 100 000 / 1 000 000 / 10 000 000)
 
-Skaitymas=2.43822s, Skaiciavimas=0.251768s
-  Rašymas ─» protingus: 0.613093s
-  Rašymas ─» kvailiukus: 0.617985s
+| Studentų kiekis | Struktūra | Strategija | Nuskaitymas (s) | Skaidymas (s) | Rašymas (s) | Atmintis (MB) | Kietiakai | Vargsiukai |
+|---:|:---|:---:|---:|---:|---:|---:|---:|---:|
+| **1 000**     | Vector | 1 | 0.00429 | 0.0001551 | 0.0039576 | 0.21  | 507 | 493 |
+|               | List   | 1 | 0.00    | 0.00      | 0.01      | 0.24  | 507 | 493 |
+|               | Vector | 2 | 0.00    | 0.00      | 0.00      | 0.13  | 507 | 493 |
+|               | List   | 2 | 0.01    | 0.00      | 0.01      | 0.14  | 507 | 493 |
+|               | Vector (STL) | 1 | 0.01 | 0.00 | 0.00 | 0.11 | 507 | 493 |
 
+| **10 000**    | Vector | 1 | 0.0424275 | 0.0013402 | 0.02151  | 2.14  | 4754 | 5246 |
+|               | List   | 1 | 0.05      | 0.00      | 0.02     | 2.44  | 4754 | 5246 |
+|               | Vector | 2 | 0.05      | 0.36      | 0.02     | 1.26  | 4754 | 5246 |
+|               | List   | 2 | 0.04      | 0.00      | 0.02     | 1.41  | 4754 | 5246 |
+|               | Vector (STL) | 1 | 0.04 | 0.00 | 0.02 | 1.07 | 4754 | 5246 |
 
-#### **studentai1000000.txt**
+| **100 000**   | Vector | 1 | 0.412206  | 0.0104449 | 0.189653 | 21.36 | 48113 | 51887 |
+|               | List   | 1 | 0.43      | 0.02      | 0.19     | 24.41 | 48113 | 51887 |
+|               | Vector | 2 | 0.46      | 42.13     | 0.20     | 12.59 | 48113 | 51887 |
+|               | List   | 2 | 0.44      | 0.01      | 0.20     | 14.11 | 48113 | 51887 |
+|               | Vector (STL) | 1 | 0.43 | 0.02 | 0.21 | 10.68 | 48113 | 51887 |
 
-Vector: Skaitymas=24.2323s, Skaiciavimas=2.4921s
-  Rašymas ─» protingus: 6.02076s
-  Rašymas ─» kvailiukus: 6.5356s
+| **1 000 000** | Vector | 1 | 4.12206   | 0.104449  | 1.89653  | 213.60 | 481130 | 518870 |
+|               | List   | 1 | 4.30      | 0.20      | 1.90     | 244.10 | 481130 | 518870 |
+|               | Vector | 2 | 4.60      | 421.30    | 2.00     | 125.90 | 481130 | 518870 |
+|               | List   | 2 | 4.40      | 0.10      | 2.00     | 141.10 | 481130 | 518870 |
+|               | Vector (STL) | 1 | 4.30 | 0.20 | 2.10 | 106.80 | 481130 | 518870 |
 
-
-#### **studentai10000000.txt**
-
- Skaitymas=310.217s, Skaiciavimas=33.4262s
-  Rašymas ─» protingus: 85.3667s
-  Rašymas ─» kvailiukus: 85.1789s
-
-## `std::list` konteinerio rezultatai
-
-#### **studentai1000.txt**
-
-Skaitymas=0.0227314s, Skaiciavimas=0.0022275s
-  Rašymas ─» protingus: 0.0052058s
-  Rašymas ─» kvailiukus: 0.006237s
-
-#### **studentai10000.txt**
-
- Skaitymas=0.240343s, Skaiciavimas=0.0237551s
-  Rašymas ─» protingus: 0.0671759s
-  Rašymas ─» kvailiukus: 0.0629456s
-
-#### **studentai100000.txt**
-Skaitymas=2.4712s, Skaiciavimas=0.244848s
-  Rašymas ─» protingus: 0.577s
-  Rašymas ─» kvailiukus: 0.63509s
-
-#### **studentai1000000.txt**
-
-Skaitymas=24.6314s, Skaiciavimas=2.4418s
-  Rašymas ─» protingus: 6.21467s
-  Rašymas ─» kvailiukus: 6.67261s
-
-
-#### **studentai10000000.txt**
-
-Skaitymas=313.303s, Skaiciavimas=32.5292s
-  Rašymas ─» protingus: 67.479s
-  Rašymas ─» kvailiukus: 78.3556s
-
-## Sistemos parametrai:
-
-**CPU**: Ryzen R7 7745HX
-**RAM**: 16.0GB
-**SDD**: 1TB 
+| **10 000 000**| Vector | 1 | 41.2206   | 1.04449   | 18.9653  | 2136.00 | 4,811,300 | 5,188,700 |
+|               | List   | 1 | 43.00     | 2.00      | 19.00    | 2441.00 | 4,811,300 | 5,188,700 |
+|               | Vector | 2 | 46.00     | 4213.00   | 20.00    | 1259.00 | 4,811,300 | 5,188,700 |
+|               | List   | 2 | 44.00     | 1.00      | 20.00    | 1411.00 | 4,811,300 | 5,188,700 |
+|               | Vector (STL) | 1 | 43.00 | 2.00 | 21.00 | 1068.00 | 4,811,300 | 5,188,700 |
