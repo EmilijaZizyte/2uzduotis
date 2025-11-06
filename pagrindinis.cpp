@@ -61,17 +61,21 @@ int main() {
         }
         else if (pasirinkimas == 6) {
             int strategija;
+            std::string failas;
+			std::cout << "Iveskite failo pavadinima: ";
+			std::cin >> failas;
+
             std::cout << "Kurios strategijos noretumet: \n1 - ('studentai' konteinerio skaidymas i du)\n2-(panaudojant tik viena nauja konteineri, trinant is bendro studentai konteinerio)\n3-(nustayti kuri strategija greitesne ir vector pritaikyti stl)\n";
             std::cin >> strategija;
 
             if (strategija == 1) {
-                strategija1_skaidymas();
+                strategija1_skaidymas(failas);
             }
             else if (strategija == 2) {
-                Strategija2();
+                Strategija2(failas);
             }
             else if (strategija == 3) {
-                Strategija3();
+                Strategija3(failas);
             }
             else {
                 std::cout << "Netinkamas pasirinkimas. Bandykite dar karta.\n";
