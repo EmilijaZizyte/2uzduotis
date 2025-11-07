@@ -21,12 +21,12 @@
 |  | Vector (STL) | 1 | 0.43 | 0.02 | 0.21 | 10.68 | 48113 | 51887 |
 | **1 000 000** | Vector | 1 | 4.1221 | 0.1044 | 1.8965 | 213.6 | 481130 | 518870 |
 |  | List | 1 | 4.30 | 0.20 | 1.90 | 244.1 | 481130 | 518870 |
-|  | Vector | 2 | 4.60 | 421.3 | 2.00 | 125.9 | 481130 | 518870 |
+|  | Vector | 2 | 4.60 | 641.3 | 2.00 | 125.9 | 481130 | 518870 |
 |  | List | 2 | 4.40 | 0.10 | 2.00 | 141.1 | 481130 | 518870 |
 |  | Vector (STL) | 1 | 4.30 | 0.20 | 2.10 | 106.8 | 481130 | 518870 |
 | **10 000 000** | Vector | 1 | 41.2206 | 1.0444 | 18.9653 | 2136.0 | 4,811,300 | 5,188,700 |
 |  | List | 1 | 43.00 | 2.00 | 19.00 | 2441.0 | 4,811,300 | 5,188,700 |
-|  | Vector | 2 | 46.00 | 4213.0 | 20.00 | 1259.0 | 4,811,300 | 5,188,700 |
+|  | Vector | 2 | 46.00 | 5313.0 | 20.00 | 1259.0 | 4,811,300 | 5,188,700 |
 |  | List | 2 | 44.00 | 1.00 | 20.00 | 1411.0 | 4,811,300 | 5,188,700 |
 |  | Vector (STL) | 1 | 43.00 | 2.00 | 21.00 | 1
 
@@ -56,17 +56,21 @@
    
 ## Kaip sukompiliuoti ir paleisti programą
 
-1.Atidarykite komandų eilutę (cmd) ir eikite į projekto katalogą, kuriame yra CMakeLists.txt. 
+1. Iš šios github repozitorijos, atsisiųskite CMakeFiles.txt, failai.h, studentai.h, failai.cpp, pagrindinis.cpp, studentai.cpp failus.
+
+2. Susikurkite darbinį aplankalą, kuriame norėsite vykdyti programą. Į šį aplanką įdėkite visus parsisiųstusfailus iš github. Šiame aplankale sukurkite dar du aplankalus: src ir Include (būtinai tokiais pavadinimais). Į src aplanką perkelkite visus .cpp failus (failai.cpp, pagrindinis.cpp, studentai.cpp), o į Include visus .h failus (failai.h, studentai.h).
+
+3.Atidarykite komandų eilutę (cmd) ir eikite į projekto katalogą, kuriame yra CMakeLists.txt. 
 - Pavyzdžiui:
 - cd C:\Users\computer\Desktop\cmake
 
-2.Sugeneruokite build failus su CMake komanda:
+4.Sugeneruokite build failus su CMake komanda:
 - cmake .\CMakeLists.txt
 
-3.Skompiliuokite projektą:
-- cmake --build build
+5.Skompiliuokite projektą:
+- cmake --build 
 
-4.Pereikite į katalogą, kuriame sukurtas vykdomasis failas:
+6.Pereikite į katalogą, kuriame sukurtas vykdomasis failas:
 - cd C:\Users\computer\Desktop\cmake\build\Debug
 
 5.Paleiskite programą:
