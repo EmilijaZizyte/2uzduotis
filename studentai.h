@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <sstream>
 #include <numeric>
-#include <sstream> 
 
 class Studentas {
 private:
@@ -18,9 +17,54 @@ private:
     double rezMed{};
 
 public:
+    // ======== KONSTRUKTORIAI ========
     Studentas() = default;
 
-    // Setters
+    Studentas(const std::string& v, const std::string& p,
+        const std::vector<int>& paz_, int e)
+        : vard(v), pav(p), paz(paz_), egzas(e) {
+    }
+
+    Studentas(const Studentas& other)
+        : vard(other.vard), pav(other.pav), paz(other.paz),
+        egzas(other.egzas), rezVid(other.rezVid), rezMed(other.rezMed) {
+    }
+
+    Studentas(Studentas&& other) noexcept
+        : vard(std::move(other.vard)), pav(std::move(other.pav)),
+        paz(std::move(other.paz)), egzas(other.egzas),
+        rezVid(other.rezVid), rezMed(other.rezMed) {
+    }
+
+    // ======== DESTRUKTORIUS ========
+    ~Studentas() = default;
+
+    // ======== KOPIJAVIMO IR PERKĖLIMO PRISKYRIMO OPERATORIAI ========
+    Studentas& operator=(const Studentas& other) {
+        if (this != &other) {
+            vard = other.vard;
+            pav = other.pav;
+            paz = other.paz;
+            egzas = other.egzas;
+            rezVid = other.rezVid;
+            rezMed = other.rezMed;
+        }
+        return *this;
+    }
+
+    Studentas& operator=(Studentas&& other) noexcept {
+        if (this != &other) {
+            vard = std::move(other.vard);
+            pav = std::move(other.pav);
+            paz = std::move(other.paz);
+            egzas = other.egzas;
+            rezVid = other.rezVid;
+            rezMed = other.rezMed;
+        }
+        return *this;
+    }
+
+    // ======== SETTERIAI ========
     void setVard(const std::string& v) { vard = v; }
     void setPav(const std::string& p) { pav = p; }
     void setPazymiai(const std::vector<int>& p) { paz = p; }
@@ -28,7 +72,7 @@ public:
     void setRezVid(double r) { rezVid = r; }
     void setRezMed(double r) { rezMed = r; }
 
-    // Getters
+    // ======== GETTERIAI ========
     std::string getVard() const { return vard; }
     std::string getPav() const { return pav; }
     std::vector<int> getPaz() const { return paz; }
@@ -36,8 +80,10 @@ public:
     double getRezVid() const { return rezVid; }
     double getRezMed() const { return rezMed; }
 
-   
-    
+    // ======== PAGALBINĖ FUNKCIJA (DRAUGAS) ========
     friend void skaiciuokRezultatus(Studentas& s);
 };
+
+// ======== IŠORINĖS FUNKCIJOS DEKLARACIJOS ========
 Studentas ivesk();
+void rodytiRezultatus(const std::vector<Studentas>& Grupe);
