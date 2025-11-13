@@ -1,57 +1,97 @@
 #pragma once
 #include "studentas.h"
+#include <fstream>
+#include <chrono>
 #include <vector>
 #include <list>
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
+#include <algorithm>
+#include <functional>
 
+// ======== KLASĖ REZULTATAI ========
 class Rezultatai {
-public:
-    // ================= Laikų kintamieji =================
-    double readTime = 0;
-    double splitTime = 0;
-    double writeTime = 0;
-    double memMB = 0;
+  public:  
+    double readTime;
+    double splitTime;
+    double writeTime;
+    double memMB;
 
-    double readTimeVector = 0;
-    double splitTimeVector = 0;
-    double writeTimeVector = 0;
-    double memMBVector = 0;
+    double readTimeVector;
+    double splitTimeVector;
+    double writeTimeVector;
+    double memMBVector;
 
-    double readTimeList = 0;
-    double splitTimeList = 0;
-    double writeTimeList = 0;
-    double memMBList = 0;
+    double readTimeList;
+    double splitTimeList;
+    double writeTimeList;
+    double memMBList;
 
-    // ================= Konstruktoriai =================
-    Rezultatai() = default;
 
-    Rezultatai(double rT, double sT, double wT, double m)
-        : readTime(rT), splitTime(sT), writeTime(wT), memMB(m) {
+    // ======== Konstruktorius ========
+    Rezultatai()
+        : readTime(0), splitTime(0), writeTime(0), memMB(0),
+        readTimeVector(0), splitTimeVector(0), writeTimeVector(0), memMBVector(0),
+        readTimeList(0), splitTimeList(0), writeTimeList(0), memMBList(0) {
     }
 
-    // ================= Pagalbiniai metodai =================
-    void printVectorResults() const {
-        std::cout << "Vector nuskaitymas: " << readTimeVector << " s\n";
-        std::cout << "Vector skaidymas: " << splitTimeVector << " s\n";
-        std::cout << "Vector rasymas: " << writeTimeVector << " s\n";
-        std::cout << "Vector atmintis: " << std::fixed << std::setprecision(2) << memMBVector << " MB\n";
-    }
+    // ======== Setteriai ========
+    void setReadTime(double val) { readTime = val; }
+    void setSplitTime(double val) { splitTime = val; }
+    void setWriteTime(double val) { writeTime = val; }
+    void setMemMB(double val) { memMB = val; }
 
-    void printListResults() const {
-        std::cout << "List nuskaitymas: " << readTimeList << " s\n";
-        std::cout << "List skaidymas: " << splitTimeList << " s\n";
-        std::cout << "List rasymas: " << writeTimeList << " s\n";
-        std::cout << "List atmintis: " << std::fixed << std::setprecision(2) << memMBList << " MB\n";
-    }
+    void setReadTimeVector(double val) { readTimeVector = val; }
+    void setSplitTimeVector(double val) { splitTimeVector = val; }
+    void setWriteTimeVector(double val) { writeTimeVector = val; }
+    void setMemMBVector(double val) { memMBVector = val; }
+
+    void setReadTimeList(double val) { readTimeList = val; }
+    void setSplitTimeList(double val) { splitTimeList = val; }
+    void setWriteTimeList(double val) { writeTimeList = val; }
+    void setMemMBList(double val) { memMBList = val; }
+
+    // ======== Getteriai ========
+    double getReadTime() const { return readTime; }
+    double getSplitTime() const { return splitTime; }
+    double getWriteTime() const { return writeTime; }
+    double getMemMB() const { return memMB; }
+
+    double getReadTimeVector() const { return readTimeVector; }
+    double getSplitTimeVector() const { return splitTimeVector; }
+    double getWriteTimeVector() const { return writeTimeVector; }
+    double getMemMBVector() const { return memMBVector; }
+
+    double getReadTimeList() const { return readTimeList; }
+    double getSplitTimeList() const { return splitTimeList; }
+    double getWriteTimeList() const { return writeTimeList; }
+    double getMemMBList() const { return memMBList; }
 };
 
-// ================= Funkcijų deklaracijos =================
+// ======== FUNKCIJŲ DEKLARACIJOS ========
+
+// Failų generavimas
 void generuokFailus();
+
+// Analizė minimaliai
 void analizuokVisusFailusMinimaliai();
+
+// Testavimas skirtingų strategijų
+void testuokStrategijas();
+
+// Strategija 1: Skaidymas
 Rezultatai strategija1_skaidymas(const std::string& failas);
+
+// Strategija 2
 Rezultatai Strategija2(const std::string& failas);
+
+// Strategija 1 naudojant STL vector
 Rezultatai strategija1_STL_vectoriui(const std::string& failas);
+
+// Strategija 3
 void Strategija3(const std::string& failas);
+
+// Strategija 2 naudojant STL vector
 Rezultatai strategija2_STL_vectoriui(const std::string& failas);
