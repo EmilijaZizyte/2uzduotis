@@ -1,4 +1,54 @@
+# Studentų apdorojimo rezultatu palyginimas V1.1
+
+Testai atlikti su vector konteineriu, greičiausiai strategijai, t.y. 1, dviejų failų dydžiams:
+studentai1000000.txt
+studentai10000000.txt
+
+**KLASĖ 1.000.000 STUDENTŲ**
+| Optimizacija | Nuskaitymas | Skaidymas   | Rašymas    | Atmintis   | EXE dydis |
+|--------------|-------------|-------------|------------|------------|-----------|
+| O1           | 4.85238 s   | 0.143274 s  | 2.17749 s  | 213.62 MB  | 107 KB    |
+| O2           | 4.42977 s   | 0.128982 s  | 2.08829 s  | 213.62 MB  | 137 KB    |
+| O3           | 4.37301 s   | 0.126603 s  | 2.20001 s  | 213.62 MB  | 139 KB    |
+
+**KLASĖ 10.000.000 STUDENTŲ**
+| Optimizacija | Nuskaitymas | Skaidymas | Rašymas   | Atmintis    | EXE dydis |
+|--------------|-------------|-----------|-----------|-------------|-----------|
+| O1           | 71.04 s     | 5.68 s    | 29.97 s   | 2136.23 MB  | 107 KB    |
+| O2           | 48.39 s     | 1.48 s    | 22.37 s   | 2136.23 MB  | 137 KB    |
+| O3           | 50.13 s     | 1.52 s    | 22.47 s   | 2136.23 MB  | 139 KB    |
+
+
+**STRUKTŪRA 1.000.000 STUDENTŲ**
+| Optimizacija | Nuskaitymas | Skaidymas   | Rašymas    | Atmintis   | EXE dydis |
+|--------------|-------------|-------------|------------|------------|-----------|
+| O1           | 4.46482 s   | 0.147022 s  | 2.11217 s  | 213.62 MB  | 105 KB    |
+| O2           | 4.39 s      | 0.13 s      | 2.01 s     | 213.62 MB  | 134 KB    |
+| O3           | 4.33 s      | 0.13 s      | 2.18 s     | 213.62 MB  | 136 KB    |
+
+**STRUKTŪRA 10.000.000 STUDENTŲ**
+| Optimizacija | Nuskaitymas | Skaidymas | Rašymas   | Atmintis    | EXE dydis |
+|--------------|-------------|-----------|-----------|-------------|-----------|
+| O1           | 47.53 s     | 10.04 s   | 27.27 s   | 2136.23 MB  | 105 KB    |
+| O2           | 55.617 s    | 3.12562 s | 22.4109 s | 2136.23 MB  | 134 KB    |
+| O3           | 54.16 s     | 4.74 s    | 29.19 s   | 2136.23 MB  | 136 KB    |
+
+***IŠVADOS***
+01: Didelių duomenų kiekių O1 testas parodo, kad klasė efektyviau skaido duomenis, todėl dideliems vektoriams klasė yra geresnis pasirinkimas.
+
+02: Skaidymas klasėje žymiai greitesnis (1.48 s vs 10.04 s), rašymas klasėje šiek tiek greitesnis nei struktūroje dideliems duomenims (22.37 s vs 27.27 s). O2 testui dideliam duomenų kiekiui klasė efektyvesnė.
+
+03: Maži duomenys (1M): klasė ir struktūra praktiškai nesiskiria. Dideli duomenys: klasė spartesnė skaidyme ir rašyme, dideliems duomenims naudoti klasę.
+
+**EXE FAILO DYDIS**
+***KLASĖS EXE dydžiai:***
+107 KB – 139 KB
+***STRUKTŪROS EXE dydžiai:*** 
+105 KB – 136 KB
+EXE dydžių skirtumai minimalūs (tik keli KB).
+
 # Studentų apdorojimo rezultatu palyginimas V1.0
+
 
 
 
