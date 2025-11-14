@@ -1,97 +1,96 @@
 #pragma once
-#include "studentas.h"
-#include <fstream>
-#include <chrono>
-#include <vector>
-#include <list>
-#include <string>
 #include <iostream>
 #include <iomanip>
-#include <sstream>
+#include <vector>
+#include <string>
 #include <algorithm>
-#include <functional>
+#include <sstream>
+#include <numeric>
 
-// ======== KLASĖ REZULTATAI ========
-class Rezultatai {
-  public:  
-    double readTime;
-    double splitTime;
-    double writeTime;
-    double memMB;
-
-    double readTimeVector;
-    double splitTimeVector;
-    double writeTimeVector;
-    double memMBVector;
-
-    double readTimeList;
-    double splitTimeList;
-    double writeTimeList;
-    double memMBList;
+class Studentas {
+public:
+    std::string vard;
+    std::string pav;
+    std::vector<int> paz;
+    int egzas{};
+    double rezVid{};
+    double rezMed{};
 
 
-    // ======== Konstruktorius ========
-    Rezultatai()
-        : readTime(0), splitTime(0), writeTime(0), memMB(0),
-        readTimeVector(0), splitTimeVector(0), writeTimeVector(0), memMBVector(0),
-        readTimeList(0), splitTimeList(0), writeTimeList(0), memMBList(0) {
+    // ======== KONSTRUKTORIAI ========
+    Studentas() = default;
+
+    Studentas(const std::string& v, const std::string& p,
+        const std::vector<int>& paz_, int e)
+        : vard(v), pav(p), paz(paz_), egzas(e) {
     }
 
-    // ======== Setteriai ========
-    void setReadTime(double val) { readTime = val; }
-    void setSplitTime(double val) { splitTime = val; }
-    void setWriteTime(double val) { writeTime = val; }
-    void setMemMB(double val) { memMB = val; }
+    Studentas(const Studentas& other)
+        : vard(other.vard), pav(other.pav), paz(other.paz),
+        egzas(other.egzas), rezVid(other.rezVid), rezMed(other.rezMed) {
+    }
 
-    void setReadTimeVector(double val) { readTimeVector = val; }
-    void setSplitTimeVector(double val) { splitTimeVector = val; }
-    void setWriteTimeVector(double val) { writeTimeVector = val; }
-    void setMemMBVector(double val) { memMBVector = val; }
+    Studentas(Studentas&& other) noexcept
+        : vard(std::move(other.vard)), pav(std::move(other.pav)),
+        paz(std::move(other.paz)), egzas(other.egzas),
+        rezVid(other.rezVid), rezMed(other.rezMed) {
+    }
 
-    void setReadTimeList(double val) { readTimeList = val; }
-    void setSplitTimeList(double val) { splitTimeList = val; }
-    void setWriteTimeList(double val) { writeTimeList = val; }
-    void setMemMBList(double val) { memMBList = val; }
+    // ======== DESTRUKTORIUS ========
+    ~Studentas() {
+        vard.clear();
+        pav.clear();
+        paz.clear();
+        rezVid = 0;
+        egzas = 0;
+        rezMed = 0;
+    }
 
-    // ======== Getteriai ========
-    double getReadTime() const { return readTime; }
-    double getSplitTime() const { return splitTime; }
-    double getWriteTime() const { return writeTime; }
-    double getMemMB() const { return memMB; }
+    // ======== KOPIJAVIMO IR PERKĖLIMO PRISKYRIMO OPERATORIAI ========
+    Studentas& operator=(const Studentas& other) {
+        if (this != &other) {
+            vard = other.vard;
+            pav = other.pav;
+            paz = other.paz;
+            egzas = other.egzas;
+            rezVid = other.rezVid;
+            rezMed = other.rezMed;
+        }
+        return *this;
+    }
 
-    double getReadTimeVector() const { return readTimeVector; }
-    double getSplitTimeVector() const { return splitTimeVector; }
-    double getWriteTimeVector() const { return writeTimeVector; }
-    double getMemMBVector() const { return memMBVector; }
+    Studentas& operator=(Studentas&& other) noexcept {
+        if (this != &other) {
+            vard = std::move(other.vard);
+            pav = std::move(other.pav);
+            paz = std::move(other.paz);
+            egzas = other.egzas;
+            rezVid = other.rezVid;
+            rezMed = other.rezMed;
+        }
+        return *this;
+    }
 
-    double getReadTimeList() const { return readTimeList; }
-    double getSplitTimeList() const { return splitTimeList; }
-    double getWriteTimeList() const { return writeTimeList; }
-    double getMemMBList() const { return memMBList; }
+    // ======== SETTERIAI ========
+    void setVard(const std::string& v) { vard = v; }
+    void setPav(const std::string& p) { pav = p; }
+    void setPazymiai(const std::vector<int>& p) { paz = p; }
+    void setEgzas(int e) { egzas = e; }
+    void setRezVid(double r) { rezVid = r; }
+    void setRezMed(double r) { rezMed = r; }
+
+    // ======== GETTERIAI ========
+    std::string getVard() const { return vard; }
+    std::string getPav() const { return pav; }
+    std::vector<int> getPaz() const { return paz; }
+    int getEgzas() const { return egzas; }
+    double getRezVid() const { return rezVid; }
+    double getRezMed() const { return rezMed; }
+
+    // ======== PAGALBINĖ FUNKCIJA (DRAUGAS) ========
+    friend void skaiciuokRezultatus(Studentas& s);
 };
 
-// ======== FUNKCIJŲ DEKLARACIJOS ========
-
-// Failų generavimas
-void generuokFailus();
-
-// Analizė minimaliai
-void analizuokVisusFailusMinimaliai();
-
-// Testavimas skirtingų strategijų
-void testuokStrategijas();
-
-// Strategija 1: Skaidymas
-Rezultatai strategija1_skaidymas(const std::string& failas);
-
-// Strategija 2
-Rezultatai Strategija2(const std::string& failas);
-
-// Strategija 1 naudojant STL vector
-Rezultatai strategija1_STL_vectoriui(const std::string& failas);
-
-// Strategija 3
-void Strategija3(const std::string& failas);
-
-// Strategija 2 naudojant STL vector
-Rezultatai strategija2_STL_vectoriui(const std::string& failas);
+// ======== IŠORINĖS FUNKCIJOS DEKLARACIJOS ========
+Studentas ivesk();
+void rodytiRezultatus(const std::vector<Studentas>& Grupe);
