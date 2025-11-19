@@ -18,7 +18,7 @@ public:
 
     // ======== KONSTRUKTORIAI ========
     Studentas()
-        : vard(" "), pav(" "), paz(0,0), egzas(0), rezVid(0.0), rezMed(0.0)
+        : vard(" "), pav(" "), paz(0, 0), egzas(0), rezVid(0.0), rezMed(0.0)
     {
     }
 
