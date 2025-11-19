@@ -19,6 +19,7 @@ int main() {
         std::cout << "4 - Generuoti testinius failus\n";
         std::cout << "5 - Nuskaityti visus failus\n";
         std::cout << "6 - Testuoti strategijas\n";
+        std::cout << "7 - 1mln 10mln vektoriui testavimas\n";
         std::cout << "Jusu pasirinkimas: ";
         int pasirinkimas;
         std::cin >> pasirinkimas;
@@ -61,6 +62,12 @@ int main() {
             else if (strategija == 2) Strategija2(failas);
             else if (strategija == 3) Strategija3(failas);
             else std::cout << "Netinkamas pasirinkimas.\n";
+        }
+        else if (pasirinkimas == 7) {
+            std::string failas;
+            std::cout << "Iveskite failo pavadinima: ";
+            std::cin >> failas;
+            strategija1_STL_vectoriui(failas);
         }
         else std::cout << "Netinkamas pasirinkimas.\n";
     }
