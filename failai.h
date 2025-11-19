@@ -36,6 +36,20 @@ public:
         readTimeVector(0), splitTimeVector(0), writeTimeVector(0), memMBVector(0),
         readTimeList(0), splitTimeList(0), writeTimeList(0), memMBList(0) {
     }
+    ~Rezultatai() {
+        readTime = 0;
+        splitTime = 0;
+        writeTime = 0;
+        memMB = 0;
+        readTimeVector = 0;
+        splitTimeVector = 0;
+        writeTimeVector = 0;
+        memMBVector = 0;
+        readTimeList = 0;
+        splitTimeList = 0;
+        writeTimeList = 0;
+        memMBList = 0;
+    }
 
     // ======== Setteriai ========
     void setReadTime(double val) { readTime = val; }
@@ -72,26 +86,12 @@ public:
 
 // ======== FUNKCIJŲ DEKLARACIJOS ========
 
-// Failų generavimas
+
 void generuokFailus();
-
-// Analizė minimaliai
 void analizuokVisusFailusMinimaliai();
-
-// Testavimas skirtingų strategijų
 void testuokStrategijas();
-
-// Strategija 1: Skaidymas
 Rezultatai strategija1_skaidymas(const std::string& failas);
-
-// Strategija 2
 Rezultatai Strategija2(const std::string& failas);
-
-// Strategija 1 naudojant STL vector
 Rezultatai strategija1_STL_vectoriui(const std::string& failas);
-
-// Strategija 3
 void Strategija3(const std::string& failas);
-
-// Strategija 2 naudojant STL vector
 Rezultatai strategija2_STL_vectoriui(const std::string& failas);
