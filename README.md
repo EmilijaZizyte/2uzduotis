@@ -1,3 +1,31 @@
+#  Įvesties/išvesties operatorius V1.2
+
+  **1**. operator>> (įvestis). Įgyvendinta studentas.cpp faile. Šis operatorius leidžia patogiai nuskaityti studento duomenis, atliekant įvesties validaciją ir automatiškai apskaičiuojant galutinius rezultatus. Galima naudoti tiek su std::cin, tiek su ifstream. 
+     
+  **2**. operator<< (išvestis). Įgyvendinta studentas.cpp faile. Šis operatorius suteikia galimybę tvarkingai ir aiškiai formatuoti išvestį tiek į konsolę, tiek į failą per ofstream.
+  **3**. Rankinė įvestis. Rankinė studento informacijos įvestis įgyvendinama funkcijoje „Studentas ivesk();“
+     Vartotojas gali pasirinkti:
+  1 – rankinė įvestis, kviečiamas operator>> (įvedami vardas, pavardė, ND, egzaminas)
+  2 – automatinė generacija, sugeneruojamas atsitiktinis studento įrašas
+  **4.** Automatinė generacija. Sugeneruotas studentas kuriamas funkcijoje „Studentas ivesk();“ pasirinkus režimą 2 – generuoti.
+  **5.** 5. Išvestis į failą. Studentų išvedimas į ekraną ar failą atliekamas per „void rodytiRezultatus(const std::vector<Studentas>& Grupe);“ Ji naudoja operator<< kiekvienam studentui:
+  for (auto& s : Grupe)
+      std::cout << s << "\n";
+  Ši funkcija gali būti naudojama ir su ifstream/ofstream, todėl lengvai pritaikoma failų rašymui.
+
+  | Metodas | Paskirtis |
+|---------|-----------|
+| `Studentas(const Studentas& other)` | Kopijavimo konstruktorius – sukuria naują objektą kopijuojant kitą `Studentas` objektą. |
+| `Studentas& operator=(const Studentas& other)` | Kopijavimo priskyrimo operatorius – kopijuoja reikšmes į jau egzistuojantį objektą. |
+| `Studentas(Studentas&& other) noexcept` | Perkelimo konstruktorius – perkelia (move) kito objekto duomenis, užtikrina efektyvumą. |
+| `Studentas& operator=(Studentas&& other) noexcept` | Perkelimo priskyrimo operatorius – perkelia duomenis į jau sukurtą objektą. |
+| `~Studentas()` | Destruktorius – išvalo objekto vidinius resursus. |
+
+  **IO operatoriai**
+operator>> leidzia nuskaityti studenta is srauto.
+operator<< leidzia isvesti studenta i srauta.
+
+  
 # Studentų apdorojimo rezultatu palyginimas V1.1
 
   Testai atlikti su vector konteineriu, greičiausiai strategijai, t.y. 1, dviejų failų dydžiams:
