@@ -29,7 +29,20 @@ public:
     double writeTimeList;
     double memMBList;
 
-
+    ~Rezultatai() {
+        readTime = 0;
+        splitTime = 0;
+        writeTime = 0;
+        memMB = 0;
+        readTimeVector = 0;
+        splitTimeVector = 0;
+        writeTimeVector = 0;
+        memMBVector = 0;
+        readTimeList = 0;
+        splitTimeList = 0;
+        writeTimeList = 0;
+        memMBList = 0;
+    }
     // ======== Konstruktorius ========
     Rezultatai()
         : readTime(0), splitTime(0), writeTime(0), memMB(0),
@@ -69,20 +82,7 @@ public:
     double getWriteTimeList() const { return writeTimeList; }
     double getMemMBList() const { return memMBList; }
 };
-~Rezultatai() {
-        readTime = 0;
-        splitTime = 0;
-        writeTime = 0;
-        memMB = 0;
-        readTimeVector = 0;
-        splitTimeVector = 0;
-        writeTimeVector = 0;
-        memMBVector = 0;
-        readTimeList = 0;
-        splitTimeList = 0;
-        writeTimeList = 0;
-        memMBList = 0;
-    }
+
 // ======== FUNKCIJŲ DEKLARACIJOS ========
 void generuokFailus();
 void analizuokVisusFailusMinimaliai();
