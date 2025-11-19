@@ -3,9 +3,10 @@
 #include <iomanip>
 #include <vector>
 #include <string>
-#include <algorithm>
 #include <sstream>
+#include <algorithm>
 #include <numeric>
+#include <list>
 
 class Studentas {
 public:
@@ -16,29 +17,10 @@ public:
     double rezVid{};
     double rezMed{};
 
-    // ======== KONSTRUKTORIAI ========
+    // Konstruktorius
     Studentas()
-        : vard(" "), pav(" "), paz(0,0), egzas(0), rezVid(0.0), rezMed(0.0)
-    {
+        : vard(" "), pav(" "), paz(), egzas(0), rezVid(0.0), rezMed(0.0) {
     }
-
-    Studentas(const std::string& v, const std::string& p,
-        const std::vector<int>& paz_, int e)
-        : vard(v), pav(p), paz(paz_), egzas(e) {
-    }
-
-    Studentas(const Studentas& other)
-        : vard(other.vard), pav(other.pav), paz(other.paz),
-        egzas(other.egzas), rezVid(other.rezVid), rezMed(other.rezMed) {
-    }
-
-    Studentas(Studentas&& other) noexcept
-        : vard(std::move(other.vard)), pav(std::move(other.pav)),
-        paz(std::move(other.paz)), egzas(other.egzas),
-        rezVid(other.rezVid), rezMed(other.rezMed) {
-    }
-
-    // ======== DESTRUKTORIUS ========
     ~Studentas() {
         vard.clear();
         pav.clear();
@@ -48,51 +30,30 @@ public:
         rezMed = 0;
     }
 
-    // ======== KOPIJAVIMO IR PERKĖLIMO PRISKYRIMO OPERATORIAI ========
-    Studentas& operator=(const Studentas& other) {
-        if (this != &other) {
-            vard = other.vard;
-            pav = other.pav;
-            paz = other.paz;
-            egzas = other.egzas;
-            rezVid = other.rezVid;
-            rezMed = other.rezMed;
-        }
-        return *this;
-    }
+    // Member funkcijos
+    double galBalas(double (*f)(std::vector<double>) = nullptr) const;
+    void skaiciuokRezultatus();
+    std::istream& readStudent(std::istream& is);
 
-    Studentas& operator=(Studentas&& other) noexcept {
-        if (this != &other) {
-            vard = std::move(other.vard);
-            pav = std::move(other.pav);
-            paz = std::move(other.paz);
-            egzas = other.egzas;
-            rezVid = other.rezVid;
-            rezMed = other.rezMed;
-        }
-        return *this;
-    }
-
-    // ======== SETTERIAI ========
+    // Setters
     void setVard(const std::string& v) { vard = v; }
     void setPav(const std::string& p) { pav = p; }
-    void setPazymiai(const std::vector<int>& p) { paz = p; }
+    void addPazymys(int p) { paz.push_back(p); }
     void setEgzas(int e) { egzas = e; }
-    void setRezVid(double r) { rezVid = r; }
-    void setRezMed(double r) { rezMed = r; }
 
-    // ======== GETTERIAI ========
+    // Getters
     std::string getVard() const { return vard; }
     std::string getPav() const { return pav; }
-    std::vector<int> getPaz() const { return paz; }
+    std::vector<int> getPazymiai() const { return paz; }
     int getEgzas() const { return egzas; }
     double getRezVid() const { return rezVid; }
     double getRezMed() const { return rezMed; }
-
-    // ======== PAGALBINĖ FUNKCIJA (DRAUGAS) ========
-    friend void skaiciuokRezultatus(Studentas& s);
 };
 
-// ======== IŠORINĖS FUNKCIJOS DEKLARACIJOS ========
-Studentas ivesk();
+// Papildomos funkcijos darbui su grupe
+double mediana(const std::vector<int>& v);
+bool compare(const Studentas& a, const Studentas& b);
+void pridetiStudenta(std::vector<Studentas>& Grupe);
 void rodytiRezultatus(const std::vector<Studentas>& Grupe);
+void skaiciuokRezultatus(Studentas& s);
+Studentas ivesk();
