@@ -89,7 +89,6 @@ public:
 
 void generuokFailus();
 void analizuokVisusFailusMinimaliai();
-void testuokStrategijas();
 Rezultatai strategija1_skaidymas(const std::string& failas);
 Rezultatai Strategija2(const std::string& failas);
 Rezultatai strategija1_STL_vectoriui(const std::string& failas);
