@@ -153,7 +153,6 @@ Studentas ivesk() {
     std::string input;
     int metode;
 
-    // Paklausiam vartotojo, ranka ar generuoti
     std::cout << "Ar norite ivesti studenta ranka (1) ar generuoti atsitiktinai (2)? ";
     std::cin >> metode;
     std::cin.ignore(10000, '\n');
@@ -165,16 +164,15 @@ Studentas ivesk() {
         Laik.pav = "pavarde" + std::to_string(pavSkaicius);
         for (int i = 0; i < 5; i++) Laik.paz.push_back(std::rand() % 11);
         Laik.egzas = std::rand() % 11;
-
         std::cout << "Sugeneruotas studentas: " << Laik.vard << " " << Laik.pav << "\n";
     }
     else { // rankinė įvestis
         while (true) {
             std::cout << "Iveskite varda: ";
             std::cin >> Laik.vard;
-            bool valid = std::all_of(Laik.vard.begin(), Laik.vard.end(), ::isalpha);
+            bool valid = all_of(Laik.vard.begin(), Laik.vard.end(), ::isalpha);
             if (valid) break;
-            std::cout << "Vardas gali tureti tik raides. Bandykite dar karta.\n";
+            std::cout << "Vardas gali tureti tik raides. Bandykite dar karta\n";
         }
 
         while (true) {
@@ -212,6 +210,18 @@ Studentas ivesk() {
             std::cin.ignore(10000, '\n');
             std::cout << "Egzamino rezultatas turi buti tarp 0 ir 10! Bandykite dar karta.\n";
         }
+    }
+
+    // ----------------- APSKAIČIUOJAME VIDURKĮ IR MEDIANĄ -----------------
+    if (!Laik.paz.empty()) {
+        double suma = 0;
+        for (int p : Laik.paz) suma += p;
+        Laik.rezVid = 0.4 * (suma / Laik.paz.size()) + 0.6 * Laik.egzas; // jei galutinis pagal 40/60
+        Laik.rezMed = 0.4 * mediana(Laik.paz) + 0.6 * Laik.egzas;
+    }
+    else {
+        Laik.rezVid = Laik.egzas;
+        Laik.rezMed = Laik.egzas;
     }
 
     return Laik;
