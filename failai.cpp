@@ -23,12 +23,12 @@ void skaiciuokRezultatusFailui(Studentas& s) {
 Rezultatai strategija1_skaidymas(const std::string& failas) {
     Rezultatai rez{};
     std::string base = failas.substr(0, failas.find(".txt"));
-    char eil_r[500];
+    std::string eilute;
     int lineCounter = 0;
 
     // ================= VECTOR =================
-    FILE* open_f = fopen(failas.c_str(), "r");
-    if (!open_f) {
+    std::ifstream open_f(failas);
+    if (!open_f.is_open()) {
         std::cout << "Nepavyko atidaryti failo!\n";
         return rez;
     }
@@ -38,19 +38,24 @@ Rezultatai strategija1_skaidymas(const std::string& failas) {
     visiStudentaiV.reserve(10'000'000);
 
     // Skaitome failą
-    while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
+    while (std::getline(open_f, eilute)) {
         lineCounter++;
         if (lineCounter <= 2) continue;
 
-        std::stringstream ss(eil_r);
+        std::stringstream ss(eilute); // kiekvienai eilutei naujas objektas
         Studentas s;
         ss >> s.vard >> s.pav;
-        for (int i = 0; i < 5; i++) { int x; ss >> x; s.paz.push_back(x); }
+        for (int i = 0; i < 5; i++) {
+            int x;
+            ss >> x;
+            s.paz.push_back(x);
+        }
         ss >> s.egzas;
         skaiciuokRezultatus(s);
         visiStudentaiV.push_back(s);
     }
-    fclose(open_f);
+
+
     auto tReadEndV = std::chrono::high_resolution_clock::now();
     rez.readTimeVector = std::chrono::duration<double>(tReadEndV - tReadStartV).count();
 
@@ -103,8 +108,8 @@ Rezultatai strategija1_skaidymas(const std::string& failas) {
     std::cout << "  Bendra atmintis (vector): " << std::fixed << std::setprecision(2) << rez.memMBVector << " MB\n";
 
     // ================= LIST =================
-    FILE* open_f2 = fopen(failas.c_str(), "r");
-    if (!open_f2) {
+    std::ifstream open_f2(failas); // naujas ifstream list daliai
+    if (!open_f2.is_open()) {
         std::cout << "Nepavyko atidaryti failo (list versijai)!\n";
         return rez;
     }
@@ -112,22 +117,26 @@ Rezultatai strategija1_skaidymas(const std::string& failas) {
     std::list<Studentas> visiStudentaiL;
     lineCounter = 0;
     auto tReadStartL = std::chrono::high_resolution_clock::now();
-    while (fgets(eil_r, sizeof(eil_r), open_f2) != nullptr) {
+
+    while (std::getline(open_f2, eilute)) {
         lineCounter++;
         if (lineCounter <= 2) continue;
 
-        std::stringstream ss(eil_r);
+        std::stringstream ss(eilute);
         Studentas s;
         ss >> s.vard >> s.pav;
-        for (int i = 0; i < 5; i++) { int x; ss >> x; s.paz.push_back(x); }
+        for (int i = 0; i < 5; i++) {
+            int x;
+            ss >> x;
+            s.paz.push_back(x);
+        }
         ss >> s.egzas;
         skaiciuokRezultatus(s);
         visiStudentaiL.push_back(s);
     }
-    fclose(open_f2);
+
     auto tReadEndL = std::chrono::high_resolution_clock::now();
     rez.readTimeList = std::chrono::duration<double>(tReadEndL - tReadStartL).count();
-
     // Skirstymas rankiniu ciklu
     auto tSplitStartL = std::chrono::high_resolution_clock::now();
     std::list<Studentas> kietiakaiL, vargsiukaiL;
@@ -179,12 +188,12 @@ Rezultatai strategija1_skaidymas(const std::string& failas) {
 Rezultatai Strategija2(const std::string& failas) {
     Rezultatai rez{};
     std::string base = failas.substr(0, failas.find(".txt"));
-    char eil_r[500];
+    std::string eilute;
     int lineCounter = 0;
 
     // ================= VECTOR =================
-    FILE* open_f = fopen(failas.c_str(), "r");
-    if (!open_f) {
+    std::ifstream open_f(failas);
+    if (!open_f.is_open()) {
         std::cout << "Nepavyko atidaryti failo!\n";
         return rez;
     }
@@ -193,20 +202,25 @@ Rezultatai Strategija2(const std::string& failas) {
     std::vector<Studentas> visiStudentaiV;
     visiStudentaiV.reserve(10'000'000);
 
-    while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
+    while (std::getline(open_f, eilute)) {
         lineCounter++;
         if (lineCounter <= 2) continue;
-        std::stringstream ss(eil_r);
+
+        std::stringstream ss(eilute);
         Studentas s;
         ss >> s.vard >> s.pav;
-        for (int i = 0; i < 5; i++) { int x; ss >> x; s.paz.push_back(x); }
+        for (int i = 0; i < 5; i++) {
+            int x; ss >> x;
+            s.paz.push_back(x);
+        }
         ss >> s.egzas;
         skaiciuokRezultatus(s);
         visiStudentaiV.push_back(s);
     }
-    fclose(open_f);
+    open_f.close();
     auto tReadEndV = std::chrono::high_resolution_clock::now();
     rez.readTimeVector = std::chrono::duration<double>(tReadEndV - tReadStartV).count();
+
 
     auto tSplitStartV = std::chrono::high_resolution_clock::now();
     std::vector<Studentas> vargsiukaiV;
@@ -245,29 +259,32 @@ Rezultatai Strategija2(const std::string& failas) {
     rez.memMBVector = totalBytesV / (1024.0 * 1024.0);
 
     // ================= LIST =================
-    FILE* open_f2 = fopen(failas.c_str(), "r");
-    if (!open_f2) {
+    std::ifstream open_f2(failas);
+    if (!open_f2.is_open()) {
         std::cout << "Nepavyko atidaryti failo (list)!\n";
         return rez;
     }
 
-    std::list<Studentas> visiStudentaiL;
     lineCounter = 0;
+    std::list<Studentas> visiStudentaiL;
     auto tReadStartL = std::chrono::high_resolution_clock::now();
-    while (fgets(eil_r, sizeof(eil_r), open_f2) != nullptr) {
+    while (std::getline(open_f2, eilute)) {
         lineCounter++;
         if (lineCounter <= 2) continue;
-        std::stringstream ss(eil_r);
+
+        std::stringstream ss(eilute);
         Studentas s;
         ss >> s.vard >> s.pav;
-        for (int i = 0; i < 5; i++) { int x; ss >> x; s.paz.push_back(x); }
+        for (int i = 0; i < 5; i++) {
+            int x; ss >> x;
+            s.paz.push_back(x);
+        }
         ss >> s.egzas;
         skaiciuokRezultatus(s);
         visiStudentaiL.push_back(s);
     }
-    fclose(open_f2);
-    auto tReadEndL = std::chrono::high_resolution_clock::now();
-    rez.readTimeList = std::chrono::duration<double>(tReadEndL - tReadStartL).count();
+    open_f2.close();
+    rez.readTimeList = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - tReadStartL).count();
 
     auto tSplitStartL = std::chrono::high_resolution_clock::now();
     std::list<Studentas> vargsiukaiL;
@@ -330,12 +347,12 @@ Rezultatai Strategija2(const std::string& failas) {
 Rezultatai strategija1_STL_vectoriui(const std::string& failas) {
     Rezultatai rez{};
     std::string base = failas.substr(0, failas.find(".txt"));
-    char eil_r[500];
+    std::string eilute;
     int lineCounter = 0;
 
     // ---------------- Skaitymas ----------------
-    FILE* open_f = fopen(failas.c_str(), "r");
-    if (!open_f) {
+    std::ifstream open_f(failas);
+    if (!open_f.is_open()) {
         std::cout << "Nepavyko atidaryti failo!\n";
         return rez;
     }
@@ -345,19 +362,21 @@ Rezultatai strategija1_STL_vectoriui(const std::string& failas) {
     std::vector<Studentas> visiStudentai;
     visiStudentai.reserve(10'000'000);
 
-    while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
+    while (std::getline(open_f, eilute)) {
         lineCounter++;
         if (lineCounter <= 2) continue;
 
-        std::stringstream ss(eil_r);
+        std::stringstream ss(eilute);
         Studentas s;
         ss >> s.vard >> s.pav;
-        for (int i = 0; i < 5; i++) { int x; ss >> x; s.paz.push_back(x); }
+        for (int i = 0; i < 5; i++) {
+            int x; ss >> x;
+            s.paz.push_back(x);
+        }
         ss >> s.egzas;
         skaiciuokRezultatus(s);
         visiStudentai.push_back(s);
     }
-    fclose(open_f);
 
     auto tReadEndV = std::chrono::high_resolution_clock::now();
     rez.readTimeVector = std::chrono::duration<double>(tReadEndV - tReadStartV).count();
@@ -417,12 +436,12 @@ Rezultatai strategija1_STL_vectoriui(const std::string& failas) {
 Rezultatai strategija2_STL_vectoriui(const std::string& failas) {
     Rezultatai rez{};  // Struktūra rezultatams
     std::string base = failas.substr(0, failas.find(".txt"));
-    char eil_r[500];
+    std::string eilute;
     int lineCounter = 0;
 
     // ================= Skaitymas =================
-    FILE* open_f = fopen(failas.c_str(), "r");
-    if (!open_f) {
+    std::ifstream open_f(failas);
+    if (!open_f.is_open()) {
         std::cout << "Nepavyko atidaryti failo!\n";
         return rez;
     }
@@ -432,20 +451,21 @@ Rezultatai strategija2_STL_vectoriui(const std::string& failas) {
     std::vector<Studentas> visiStudentaiV;
     visiStudentaiV.reserve(10'000'000);
 
-    while (fgets(eil_r, sizeof(eil_r), open_f) != nullptr) {
+    while (std::getline(open_f, eilute)) {
         lineCounter++;
         if (lineCounter <= 2) continue;
 
-        std::stringstream ss(eil_r);
+        std::stringstream ss(eilute);
         Studentas s;
         ss >> s.vard >> s.pav;
-        s.paz.resize(5);
+        s.paz.resize(5);  
         for (int i = 0; i < 5; i++) ss >> s.paz[i];
         ss >> s.egzas;
         skaiciuokRezultatus(s);
         visiStudentaiV.push_back(s);
     }
-    fclose(open_f);
+
+    open_f.close();
 
     auto tReadEnd = std::chrono::high_resolution_clock::now();
     rez.readTime = std::chrono::duration<double>(tReadEnd - tReadStart).count();
