@@ -22,30 +22,30 @@ int main() {
         std::cout << "Jusu pasirinkimas: ";
         int pasirinkimas;
         std::cin >> pasirinkimas;
+
         if (std::cin.fail()) {
             std::cin.clear();
             std::cin.ignore(10000, '\n');
             std::cout << "Bandykite dar karta.\n";
             continue;
         }
-        std::cin.ignore(10000, '\n');
 
+        std::cin.ignore(10000, '\n');
         if (pasirinkimas == 1) {
+            std::cout << "\n=== Ivedimas ir issaugojimas ===\n";
             Studentas s = ivesk();
+
             GrupeVector.push_back(s);
-            std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas vectoriuje.\n";
+            std::cout << "Studentas '" << s.vard << " " << s.pav
+                << "' issaugotas vectoriuje adresu: " << &GrupeVector.back() << "\n";
+
             GrupeList.push_back(s);
-            std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas liste.\n";
+            std::cout << "Studentas '" << s.vard << " " << s.pav
+                << "' issaugotas liste adresu: " << &GrupeList.back() << "\n";
         }
+
         else if (pasirinkimas == 2) {
-            if (GrupeVector.empty()) { std::cout << "Sarasas tuscias.\n"; continue; }
-            std::cout << std::left << std::setw(15) << "Vardas" << std::left << std::setw(15) << "Pavarde"
-                << std::right << std::setw(15) << "Galutinis(Vid.)" << std::right << std::setw(15) << "Galutinis(Med.)" << "\n";
-            for (const auto& s : GrupeVector) {
-                std::cout << std::left << std::setw(15) << s.getVard() << std::left << std::setw(15) << s.getPav()
-                    << std::right << std::setw(15) << std::fixed << std::setprecision(2) << s.getRezVid()
-                    << std::right << std::setw(15) << std::fixed << std::setprecision(2) << s.getRezMed() << "\n";
-            }
+			rodytiRezultatus(GrupeVector);
         }
         else if (pasirinkimas == 3) break;
         else if (pasirinkimas == 4) generuokFailus();
