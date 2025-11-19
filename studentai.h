@@ -8,7 +8,7 @@
 #include <numeric>
 
 class Studentas {
-private:
+public:
     std::string vard;
     std::string pav;
     std::vector<int> paz;
@@ -16,9 +16,11 @@ private:
     double rezVid{};
     double rezMed{};
 
-public:
     // ======== KONSTRUKTORIAI ========
-    Studentas() = default;
+    Studentas()
+        : vard(" "), pav(" "), paz(0,0), egzas(0), rezVid(0.0), rezMed(0.0)
+    {
+    }
 
     Studentas(const std::string& v, const std::string& p,
         const std::vector<int>& paz_, int e)
@@ -37,7 +39,14 @@ public:
     }
 
     // ======== DESTRUKTORIUS ========
-    ~Studentas() = default;
+    ~Studentas() {
+        vard.clear();
+        pav.clear();
+        paz.clear();
+        rezVid = 0;
+        egzas = 0;
+        rezMed = 0;
+    }
 
     // ======== KOPIJAVIMO IR PERKĖLIMO PRISKYRIMO OPERATORIAI ========
     Studentas& operator=(const Studentas& other) {
