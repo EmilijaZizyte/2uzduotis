@@ -31,17 +31,17 @@ public:
     }
 
     // Member funkcijos
-    double galBalas(double (*f)(std::vector<double>) = nullptr) const;
+	double galBalas(double (*f)(std::vector<double>) = nullptr) const; // „f yra rodykle i funkcija, kuri priima std::vector<double> ir grazina double“
     void skaiciuokRezultatus();
-    std::istream& readStudent(std::istream& is);
+	std::istream& readStudent(std::istream& is); // istream – įvesties srautas leidzia skaityti is std::cin arba failo
 
-    // Setters
+    // Setteriai
     void setVard(const std::string& v) { vard = v; }
     void setPav(const std::string& p) { pav = p; }
     void addPazymys(int p) { paz.push_back(p); }
     void setEgzas(int e) { egzas = e; }
 
-    // Getters
+    // Getteriai
     std::string getVard() const { return vard; }
     std::string getPav() const { return pav; }
     std::vector<int> getPazymiai() const { return paz; }
