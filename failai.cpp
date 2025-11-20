@@ -22,12 +22,12 @@ void skaiciuokRezultatusFailui(Studentas& s) {
 // ================= STRATEGIJA 1 su skaidymu =================
 Rezultatai strategija1_skaidymas(const std::string& failas) {
     Rezultatai rez{};
-    std::string base = failas.substr(0, failas.find(".txt"));
+	std::string base = failas.substr(0, failas.find(".txt")); // pagrindas failo pavadinimui
     std::string eilute;
     int lineCounter = 0;
 
     // ================= VECTOR =================
-    std::ifstream open_f(failas);
+	std::ifstream open_f(failas); // atidarome failą
     if (!open_f.is_open()) {
         std::cout << "Nepavyko atidaryti failo!\n";
         return rez;
@@ -39,10 +39,10 @@ Rezultatai strategija1_skaidymas(const std::string& failas) {
 
     // Skaitome failą
     while (std::getline(open_f, eilute)) {
-        lineCounter++;
+		lineCounter++; // skaitome eilutes
         if (lineCounter <= 2) continue;
 
-        std::stringstream ss(eilute); // kiekvienai eilutei naujas objektas
+        std::stringstream ss(eilute); // kiekvienai eilutei naujas objektas, taip reikia nes getline naudojamas virsuje
         Studentas s;
         ss >> s.vard >> s.pav;
         for (int i = 0; i < 5; i++) {
@@ -458,7 +458,7 @@ Rezultatai strategija2_STL_vectoriui(const std::string& failas) {
         std::stringstream ss(eilute);
         Studentas s;
         ss >> s.vard >> s.pav;
-        s.paz.resize(5);  
+        s.paz.resize(5);
         for (int i = 0; i < 5; i++) ss >> s.paz[i];
         ss >> s.egzas;
         skaiciuokRezultatus(s);
