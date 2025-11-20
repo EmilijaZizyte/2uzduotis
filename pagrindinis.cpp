@@ -7,7 +7,7 @@
 #include "failai.h"
 
 int main() {
-    std::srand(static_cast<unsigned>(std::time(0)));
+    std::srand(static_cast<unsigned>(std::time(0)));  
     std::vector<Studentas> GrupeVector;
     std::list<Studentas> GrupeList;
 
@@ -20,6 +20,7 @@ int main() {
         std::cout << "5 - Nuskaityti visus failus\n";
         std::cout << "6 - Testuoti strategijas\n";
         std::cout << "7 - 1mln 10mln vektoriui testavimas\n";
+        std::cout << "8 - Testuoti Rule of Three ir IO operatorius\n";
         std::cout << "Jusu pasirinkimas: ";
         int pasirinkimas;
         std::cin >> pasirinkimas;
@@ -34,9 +35,9 @@ int main() {
         if (pasirinkimas == 1) {
             Studentas s = ivesk();
             GrupeVector.push_back(s);
-            std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas vectoriuje.\n";
+            std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas vectoriuj adresu" << &GrupeVector.back() << "\n";
             GrupeList.push_back(s);
-            std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas liste.\n";
+            std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas liste adresu"<< &GrupeList.back() << "\n";
         }
         else if (pasirinkimas == 2) {
             if (GrupeVector.empty()) { std::cout << "Sarasas tuscias.\n"; continue; }
@@ -68,6 +69,9 @@ int main() {
             std::cout << "Iveskite failo pavadinima: ";
             std::cin >> failas;
             strategija1_STL_vectoriui(failas);
+        }
+        else if (pasirinkimas == 8) {
+            testasRuleOfThreeIrIO();
         }
         else std::cout << "Netinkamas pasirinkimas.\n";
     }
