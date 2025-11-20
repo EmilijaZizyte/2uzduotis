@@ -28,6 +28,9 @@
 operator>> leidzia nuskaityti studenta is srauto.
 operator<< leidzia isvesti studenta i srauta.
 
+<img width="837" height="212" alt="image" src="https://github.com/user-attachments/assets/a9165aee-2627-4d4f-abb4-58b24cfd49e2" />
+
+
   
 # Studentų apdorojimo rezultatu palyginimas V1.1
 
