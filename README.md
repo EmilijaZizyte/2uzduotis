@@ -29,15 +29,23 @@ operator>> leidzia nuskaityti studenta is srauto.
 operator<< leidzia isvesti studenta i srauta.
 
 **Rule of Three demonstracija**
+
+
 <img width="837" height="212" alt="image" src="https://github.com/user-attachments/assets/a9165aee-2627-4d4f-abb4-58b24cfd49e2" />
+
+
 Pagrindiniame main.cpp galima vartotojui leidžiama pasirinkti (8), ar nori patikrinti Rule of three taisykę, ir įsitikinti, kad operatoriai veikia teisingai, prisikiriama funkcija testasRuleOfThreeIrIO() skirta patikrinti Studentas klasės kopijavimo, priskyrimo ir IO operatorių veikimą. Pirmiausia sukuriamas studentas s1, kurio duomenys kopijuojami į s2 naudojant kopijavimo konstruktorių, taip pat išvedamas originalas ir kopija, kad patikrintų duomenų teisingumą. Tada testuojamas kopijavimo priskyrimas, kai egzistuojančiam objektui s4 priskiriami duomenys iš s3, o rezultatai išvedami ekrane. Galiausiai tikrinami IO operatoriai: naudojant stringstream įvedami studento duomenys į s5, paskaičiuojami galutiniai rezultatai ir išvedami, kad įsitikinti operatorių teisingu veikimu. Tokiu būdu patikrinama, kad kopijavimas, priskyrimas ir įvedimas/išvedimas veikia teisingai ir nekelia klaidų.
 
  **DESTRUKTORIUS**
+
+ 
 <img width="166" height="172" alt="image" src="https://github.com/user-attachments/assets/9c3cb44f-3f9f-420c-b3dd-0f2e48359e27" />
 
 Destruktorius rankiniu būdu išvalo visus Studentas objekto duomenis, kai objektas sunaikinamas. Tai užtikrina, kad visi resursai būtų tinkamai atlaisvinti. 
 
 **Kopijavimo konstruktorius**
+
+
 <img width="677" height="83" alt="image" src="https://github.com/user-attachments/assets/4674a896-149d-4dc9-81c4-7b137f1ddac9" />
 
 Kopijavimo konstruktorius, naudojamas kai mes norime sukurti nauja objekta, naudojame kai norime sukurti ka? nauja objekta is esamo objekto, mano kode jis naudojamas kai mes priskiriame viena objekta kitam, pvz: Studentas s2 = s1;
