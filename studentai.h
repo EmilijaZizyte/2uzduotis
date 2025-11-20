@@ -52,7 +52,6 @@ public:
 
 // Papildomos funkcijos darbui su grupe
 double mediana(const std::vector<int>& v);
-bool compare(const Studentas& a, const Studentas& b);
 void pridetiStudenta(std::vector<Studentas>& Grupe);
 void rodytiRezultatus(const std::vector<Studentas>& Grupe);
 void skaiciuokRezultatus(Studentas& s);
