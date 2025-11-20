@@ -98,11 +98,6 @@ double mediana(const std::vector<int>& v) {
     return n % 2 ? t[n / 2] : (t[n / 2 - 1] + t[n / 2]) / 2.0;
 }
 
-// ------------------ Laisvoji funkcija rikiavimui ------------------
-
-bool compare(const Studentas& a, const Studentas& b) {
-    return a.getPav() < b.getPav();
-}
 
 // ------------------ Rodymas vektoriuje ------------------
 
