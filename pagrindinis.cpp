@@ -7,7 +7,7 @@
 #include "failai.h"
 
 int main() {
-    std::srand(static_cast<unsigned>(std::time(0)));  
+    std::srand(static_cast<unsigned>(std::time(0)));
     std::vector<Studentas> GrupeVector;
     std::list<Studentas> GrupeList;
 
@@ -37,7 +37,7 @@ int main() {
             GrupeVector.push_back(s);
             std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas vectoriuj adresu" << &GrupeVector.back() << "\n";
             GrupeList.push_back(s);
-            std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas liste adresu"<< &GrupeList.back() << "\n";
+            std::cout << "Studentas '" << s.getVard() << " " << s.getPav() << "' issaugotas liste adresu" << &GrupeList.back() << "\n";
         }
         else if (pasirinkimas == 2) {
             if (GrupeVector.empty()) { std::cout << "Sarasas tuscias.\n"; continue; }
