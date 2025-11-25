@@ -7,6 +7,7 @@
 #include "failai.h"
 
 int main() {
+    //Zmogus z;
     std::srand(static_cast<unsigned>(std::time(0)));
     std::vector<Studentas> GrupeVector;
     std::list<Studentas> GrupeList;
