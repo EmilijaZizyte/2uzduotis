@@ -20,6 +20,10 @@ public:
     std::string getVard() const { return vard; }
     std::string getPav() const { return pav; }
 
+    Zmogus& operator=(const Zmogus& other) = default;
+    Zmogus& operator=(Zmogus&& other) noexcept = default;
+
+
     // Setteriai
     void setVard(const std::string& v) { vard = v; }
     void setPav(const std::string& p) { pav = p; }
