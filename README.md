@@ -1,3 +1,12 @@
+#  Abstrakti klasė Zmogus
+
+Dėl abstrakčių funkcijų neįmanoma sukurti Žmogus objekto, tik išvestinę klasę. Demonstracija kompiliavimo metu (rezultatas, ką gauname paleidus programą):
+
+<img width="1056" height="741" alt="image" src="https://github.com/user-attachments/assets/ca0a5734-632b-45c9-9d6b-fa031e3aacc8" />
+
+Rezultatas: negalima sukurti Žmogus objekto, galima tik išvestinį Studentas.
+
+
 #  Įvesties/išvesties operatorius V1.2
 
    **1**. operator>> (įvestis). Įgyvendinta studentas.cpp faile. Šis operatorius leidžia patogiai nuskaityti studento duomenis, atliekant įvesties validaciją ir automatiškai apskaičiuojant galutinius rezultatus. Galima naudoti tiek su std::cin, tiek su ifstream. 
