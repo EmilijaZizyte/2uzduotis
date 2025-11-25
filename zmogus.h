@@ -13,7 +13,7 @@ public:
 
     virtual ~Zmogus() = default;
 
-    // Abstrakti funkcija — privalo b?ti perrašyta Studentas klas?je
+    
     virtual void spausdinti() const = 0;
 
     // Getteriai
