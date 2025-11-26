@@ -2,9 +2,10 @@
 
 Dėl abstrakčių funkcijų neįmanoma sukurti Žmogus objekto, tik išvestinę klasę. Demonstracija kompiliavimo metu (rezultatas, ką gauname paleidus programą):
 
-<img width="1056" height="741" alt="image" src="https://github.com/user-attachments/assets/ca0a5734-632b-45c9-9d6b-fa031e3aacc8" />
+<img width="1082" height="737" alt="image" src="https://github.com/user-attachments/assets/26595a89-d84b-43b7-aced-eb7fda10bb35" />
 
-Rezultatas: negalima sukurti Žmogus objekto, galima tik išvestinį Studentas.
+
+Rezultatas: negalima sukurti Žmogus objekto, galima tik išvestinį Studentas, klasė Zmogus, turi būti užkomentuota, kitaip, programos veikimo metu bus spausdinama klaida.
 
 
 #  Įvesties/išvesties operatorius V1.2
