@@ -76,7 +76,7 @@ public:
     }
 
     // ======== GETTERIAI ========
-    std::vector<int> getPaz() const { return paz; }
+    const std::vector<int> getPaz() const { return paz; }
     int getEgzas() const { return egzas; }
     double getRezVid() const { return rezVid; }
     double getRezMed() const { return rezMed; }
