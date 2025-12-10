@@ -13,7 +13,7 @@ public:
 
     virtual ~Zmogus() = default;
 
-    
+
     virtual void spausdinti() const = 0;
 
     // Getteriai
