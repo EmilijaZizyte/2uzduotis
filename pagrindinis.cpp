@@ -7,7 +7,7 @@
 #include "failai.h"
 
 int main() {
-	//Zmogus z; //pakomentuoti, nes paleidziant programa sistema ismes klaida, kad negalima sukurti 
+    //Zmogus z; //pakomentuoti, nes paleidziant programa sistema ismes klaida, kad negalima sukurti 
     // abstraktaus klases objekto
     std::srand(static_cast<unsigned>(std::time(0)));
     std::vector<Studentas> GrupeVector;
