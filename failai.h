@@ -30,10 +30,8 @@ struct Rezultatai {
     double memMBList = 0;
 };
 
-
 void generuokFailus();
 void analizuokVisusFailusMinimaliai();
-void testuokStrategijas();
 
 
 Rezultatai strategija1_skaidymas(const std::string& failas);
