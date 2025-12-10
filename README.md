@@ -1,3 +1,10 @@
+#  UNIT TESTAI
+<img width="1386" height="923" alt="image" src="https://github.com/user-attachments/assets/a61cead1-9a9f-41fb-83e5-03cebe9966f2" />
+
+
+Šiame faile realizuojami testai, skirti tikrinti atskirų programos funkcijų ir klasių veikimą naudojant „Google Test“ karkasą. Pirmoji testų dalis tikrina funkciją mediana, pateikiant tris skirtingus scenarijus: kai elementų skaičius nelyginis, kai lyginis ir kai likęs tik vienas elementas. Tokiu būdu užtikrinama, kad funkcija teisingai apskaičiuoja medianą įvairiomis sąlygomis. Antroji dalis skirta klasei Studentas: tikrinami konstruktoriai, getter ir setter metodai, duomenų inicializavimas bei kopijavimo konstruktoriaus veikimas. Testai užtikrina, kad objektas sukuriamas su numatytomis reikšmėmis, set’eriai korektiškai priskiria duomenis, o kopijavimo konstruktorius teisingai perkelia visus laukus į naują objektą. Failo pabaigoje pateiktas main metodas inicijuoja Google Test aplinką ir paleidžia visus aprašytus testus.
+Įkeltoje ekrano nuotraukoje, matyti sėkmingas testų vykdymas
+
 #  Abstrakti klasė Zmogus
 
 Dėl abstrakčių funkcijų neįmanoma sukurti Žmogus objekto, tik išvestinę klasę. Demonstracija kompiliavimo metu (rezultatas, ką gauname paleidus programą):
