@@ -5,6 +5,27 @@
 Šiame faile realizuojami testai, skirti tikrinti atskirų programos funkcijų ir klasių veikimą naudojant „Google Test“ karkasą. Pirmoji testų dalis tikrina funkciją mediana, pateikiant tris skirtingus scenarijus: kai elementų skaičius nelyginis, kai lyginis ir kai likęs tik vienas elementas. Tokiu būdu užtikrinama, kad funkcija teisingai apskaičiuoja medianą įvairiomis sąlygomis. Antroji dalis skirta klasei Studentas: tikrinami konstruktoriai, getter ir setter metodai, duomenų inicializavimas bei kopijavimo konstruktoriaus veikimas. Testai užtikrina, kad objektas sukuriamas su numatytomis reikšmėmis, set’eriai korektiškai priskiria duomenis, o kopijavimo konstruktorius teisingai perkelia visus laukus į naują objektą. Failo pabaigoje pateiktas main metodas inicijuoja Google Test aplinką ir paleidžia visus aprašytus testus.
 Įkeltoje ekrano nuotraukoje, matyti sėkmingas testų vykdymas
 
+## Testų paleidimas
+
+Projektas naudoja Visual Studio įdiegtą Google Test aplinką. Testams sugeneruoti buvo pasirinktas
+Google Test projekto šablonas, todėl jokių papildomų install nereikia.
+
+### Kaip prijungti testus prie programos kodo
+1. Atidarykite **Google Testai** -> *References*.
+2. Pasirinkite **Add Reference**.
+3. Pažymėkite pagrindinį projekto modulį (pvz. 'V2.0').
+
+Taip testų projektas gali naudoti 'studentas.h', 'zmogus.h' ir kitus '.cpp' bei '.h' failus.
+
+### Kaip paleisti testus
+Viršutiniame meniu pasirinkite **Test → Run All Tests**, 
+
+  arba
+  
+Atidarykite Test Explorer → **Run All**.
+
+Testai paleidžiami ir išspausdinami rezultatai
+
 #  Abstrakti klasė Zmogus
 
 Dėl abstrakčių funkcijų neįmanoma sukurti Žmogus objekto, tik išvestinę klasę. Demonstracija kompiliavimo metu (rezultatas, ką gauname paleidus programą):
