@@ -217,9 +217,9 @@ EXE dydžių skirtumai minimalūs (tik keli KB).
    
 ## Kaip sukompiliuoti ir paleisti programą
 
-1. Iš šios github repozitorijos, atsisiųskite CMakeFiles.txt, failai.h, studentai.h, failai.cpp, pagrindinis.cpp, studentai.cpp failus.
+1. Iš šios github repozitorijos, atsisiųskite CMakeFiles.txt, failai.h, studentai.h, failai.cpp, pagrindinis.cpp, studentai.cpp, test.cpp failus.
 
-2. Susikurkite darbinį aplankalą, kuriame norėsite vykdyti programą. Į šį aplanką įdėkite visus parsisiųstusfailus iš github. Šiame aplankale sukurkite dar du aplankalus: src ir Include (būtinai tokiais pavadinimais). Į src aplanką perkelkite visus .cpp failus (failai.cpp, pagrindinis.cpp, studentai.cpp), o į Include visus .h failus (failai.h, studentai.h).
+2. Susikurkite darbinį aplankalą, kuriame norėsite vykdyti programą. Į šį aplanką įdėkite visus parsisiųstus failus iš github. Šiame aplankale sukurkite dar du aplankalus: src ir Include (būtinai tokiais pavadinimais). Į src aplanką perkelkite visus .cpp failus (failai.cpp, pagrindinis.cpp, studentai.cpp, test.cpp), o į Include visus .h failus (failai.h, studentai.h).
 
 3.Atidarykite komandų eilutę (cmd) ir eikite į projekto katalogą, kuriame yra CMakeLists.txt. 
 - Pavyzdžiui:
