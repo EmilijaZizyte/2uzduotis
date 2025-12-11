@@ -10,31 +10,31 @@
 
 /**
  * @class Studentas
- * @brief Studentą reprezentuojanti klasė, paveldinti iš Zmogus.
+ * @brief Studenta reprezentuojanti klase, paveldinti is Zmogus.
  *
- * Saugo pažymius, egzamino rezultatą, galutinius balus
- * (vidurkį ir medianą) ir leidžia atlikti su jais operacijas.
+ * Saugo pazymius, egzamino rezultata, galutinius balus
+ * (vidurki ir mediana) ir leidzia atlikti su jais operacijas.
  */
 class Studentas : public Zmogus {
 public:
-    /// Studentų pažymių sąrašas.
+    /// Studentu pazymiu sarasas.
     std::vector<int> paz;
 
-    /// Egzamino pažymys.
+    /// Egzamino pazymys.
     int egzas{};
 
-    /// Galutinis balas pagal vidurkį.
+    /// Galutinis balas pagal vidurki.
     double rezVid{};
 
-    /// Galutinis balas pagal medianą.
+    /// Galutinis balas pagal mediana.
     double rezMed{};
 
     // ======== KONSTRUKTORIAI ========
 
     /**
-     * @brief Tuščias konstruktorius.
+     * @brief Tuscias konstruktorius.
      *
-     * Inicializuoja tuščius vardą, pavardę ir 0 dydžio pažymių vektorių.
+     * Inicializuoja tuscius varda, pavarde ir 0 dydzio pazymiu vektoriu.
      */
     Studentas()
         : Zmogus( "", ""), paz(), egzas(0), rezVid(0.0), rezMed(0.0)
@@ -46,8 +46,8 @@ public:
      *
      * @param v Vardas.
      * @param p Pavardė.
-     * @param paz_ Pažymių vektorius.
-     * @param e Egzamino pažymys.
+     * @param paz_ Pazymiu vektorius.
+     * @param e Egzamino pazymys.
      */
     Studentas(const std::string& v, const std::string& p,
         const std::vector<int>& paz_, int e)
@@ -70,9 +70,9 @@ public:
     }
 
     /**
-     * @brief Perkėlimo konstruktorius.
+     * @brief Perkelimo konstruktorius.
      *
-     * @param other Objektas, iš kurio atliekamas perkėlimas.
+     * @param other Objektas, is kurio atliekamas perkelimas.
      */
     Studentas(Studentas&& other) noexcept
         : Zmogus(std::move(other.vard), std::move(other.pav)),
@@ -86,7 +86,7 @@ public:
     /**
      * @brief Destruktorius.
      *
-     * Išvalo pažymius ir atstato kitus laukus į 0.
+     * Isvalo pazymius ir atstato kitus laukus i 0.
      */
     ~Studentas() {
         paz.clear();
@@ -100,8 +100,8 @@ public:
     /**
      * @brief Kopijavimo priskyrimo operatorius.
      *
-     * @param other Objektas, iš kurio kopijuojama.
-     * @return Nuoroda į esamą objektą.
+     * @param other Objektas, is kurio kopijuojama.
+     * @return Nuoroda i esama objekta.
      */
     Studentas& operator=(const Studentas& other) {
         if (this != &other) {
@@ -115,10 +115,10 @@ public:
     }
 
     /**
-     * @brief Perkėlimo priskyrimo operatorius.
+     * @brief Perkelimo priskyrimo operatorius.
      *
-     * @param other Objektas, iš kurio perkeliama.
-     * @return Nuoroda į esamą objektą.
+     * @param other Objektas, is kurio perkeliama.
+     * @return Nuoroda i esama objekta.
      */
     Studentas& operator=(Studentas&& other) noexcept {
         if (this != &other) {
@@ -134,25 +134,25 @@ public:
     // ======== GETTERIAI ========
 
     /**
-     * @brief Grąžina pažymių vektorių.
-     * @return Pažymių vektorius.
+     * @brief Grazina pazymiu vektoriu.
+     * @return Pazymiu vektorius.
      */
     const std::vector<int> getPaz() const { return paz; }
 
     /**
-     * @brief Grąžina egzamino balą.
+     * @brief Grazina egzamino bala.
      * @return Egzamino balas.
      */
     int getEgzas() const { return egzas; }
 
     /**
-     * @brief Grąžina galutinį balą pagal vidurkį.
+     * @brief Grazina galutini bala pagal vidurki.
      * @return Galutinis balas.
      */
     double getRezVid() const { return rezVid; }
 
     /**
-     * @brief Grąžina galutinį balą pagal medianą.
+     * @brief Grazina galutini bala pagal mediana.
      * @return Galutinis balas.
      */
     double getRezMed() const { return rezMed; }
@@ -160,35 +160,35 @@ public:
     // ======== SETTERIAI ========
 
     /**
-     * @brief Nustato pažymių vektorių.
-     * @param p Pažymiai.
+     * @brief Nustato pazymiu vektoriu.
+     * @param p Pazymiai.
      */
     void setPazymiai(const std::vector<int>& p) { paz = p; }
 
     /**
-     * @brief Nustato egzamino balą.
+     * @brief Nustato egzamino bala.
      * @param e Egzamino balas.
      */
     void setEgzas(int e) { egzas = e; }
 
     /**
-     * @brief Nustato galutinį balą pagal vidurkį.
-     * @param r Reikšmė.
+     * @brief Nustato galutini bala pagal vidurki.
+     * @param r Reiksme.
      */
     void setRezVid(double r) { rezVid = r; }
 
     /**
-     * @brief Nustato galutinį balą pagal medianą.
-     * @param r Reikšmė.
+     * @brief Nustato galutini bala pagal mediana.
+     * @param r Reiksme.
      */
     void setRezMed(double r) { rezMed = r; }
 
     // ======== VIRTUAL FUNCTION IMPLEMENTATION ========
 
     /**
-     * @brief Studentų informacijos spausdinimo funkcija.
+     * @brief Studentu informacijos spausdinimo funkcija.
      *
-     * Perrašo Zmogus::spausdinti().
+     * Perraso Zmogus::spausdinti().
      */
     void spausdinti() const override {
         std::cout << vard << " " << pav
@@ -201,21 +201,21 @@ public:
 
     /**
      * @brief Draugo funkcija – skaičiuoja galutinius rezultatus.
-     * @param s Studentas, kuriam skaičiuojami rezultatai.
+     * @param s Studentas, kuriam skaiciuojami rezultatai.
      */
     friend void skaiciuokRezultatus(Studentas& s);
 
     /**
-     * @brief Srautinis išvedimo operatorius.
-     * @param os Išvedimo srautas.
+     * @brief Srautinis isvedimo operatorius.
+     * @param os Isvedimo srautas.
      * @param s Studentas.
      * @return Tas pats srautas.
      */
     friend std::ostream& operator<<(std::ostream& os, const Studentas& s);
 
     /**
-     * @brief Srautinis įvedimo operatorius.
-     * @param is Įvedimo srautas.
+     * @brief Srautinis ivedimo operatorius.
+     * @param is ivedimo srautas.
      * @param s Studentas.
      * @return Tas pats srautas.
      */
@@ -231,8 +231,8 @@ public:
 Studentas ivesk();
 
 /**
- * @brief Išveda visų studentų rezultatus lentelėje.
- * @param Grupe Studentų vektorius.
+ * @brief Isveda visų studentu rezultatus lenteleje.
+ * @param Grupe Studentu vektorius.
  */
 void rodytiRezultatus(const std::vector<Studentas>& Grupe);
 
