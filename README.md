@@ -18,11 +18,11 @@ Google Test projekto šablonas, todėl jokių papildomų install nereikia.
 Taip testų projektas gali naudoti 'studentas.h', 'zmogus.h' ir kitus '.cpp' bei '.h' failus.
 
 ### Kaip paleisti testus
-Viršutiniame meniu pasirinkite **Test → Run All Tests**, 
+Viršutiniame meniu pasirinkite **Test -> Run All Tests**, 
 
   arba
   
-Atidarykite Test Explorer → **Run All**.
+Atidarykite Test Explorer -> **Run All**.
 
 Testai paleidžiami ir išspausdinami rezultatai
 
